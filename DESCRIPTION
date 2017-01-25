@@ -1,0 +1,17 @@
+Package: alterryx
+Type: Package
+Title: An API Client for the Alteryx Gallery
+Version: 0.1.0
+Author: Michael Treadwell
+Maintainer: Michael Treadwell <michael.treadwell@interworks.com>
+Description: alterryx provides functions to access each of the alteryx gallery
+    api endpoints.
+License: GPL-2
+Encoding: UTF-8
+LazyData: true
+Imports:
+    httr,
+    utils,
+    digest,
+    base64enc
+RoxygenNote: 5.0.1
