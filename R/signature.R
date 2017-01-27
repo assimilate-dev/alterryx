@@ -11,7 +11,6 @@ make_nonce <- function() {
 make_required_headers <- function() {
   oauth_nonce <- make_nonce()
   oauth_timestamp <- as.character(as.integer(Sys.time()))
-
   required_headers <- list(
     oauth_consumer_key = getOption("alteryx_api_key"),
     oauth_signature_method = "HMAC-SHA1",

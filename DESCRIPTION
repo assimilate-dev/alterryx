@@ -13,5 +13,6 @@ Imports:
     httr,
     utils,
     digest,
-    base64enc
+    base64enc,
+    jsonlite
 RoxygenNote: 5.0.1

@@ -12,13 +12,11 @@ get_request_url <- function(gallery,
                             request_method,
                             request_params) {
   required_headers <- make_required_headers()
-
   oauth_signature <- make_signature(gallery,
                                     endpoint,
                                     request_method,
                                     required_headers,
                                     request_params)
-
   params <- append(required_headers, request_params)
   params <- append(params, list(oauth_signature = oauth_signature))
   params <- params[sort(names(params))]
@@ -26,6 +24,22 @@ get_request_url <- function(gallery,
   request_url <- paste0(gallery, endpoint, '?', params)
 
   return(request_url)
+}
+
+#' Submit Request
+#'
+#' @inheritParams get_request_url
+submit_request <- function(gallery,
+                           endpoint,
+                           request_method,
+                           request_params) {
+  request_url <-
+    get_request_url(gallery, endpoint, request_method, request_params)
+  response <- httr::GET(request_url)
+  response <- check_status(response)
+  content <- httr::content(response)
+
+  return(content)
 }
 
 #' Get Subscriptions
@@ -36,15 +50,16 @@ get_request_url <- function(gallery,
 #'
 #' @inheritParams get_request_url
 #' @export
-get_subscriptions <- function(gallery, request_params) {
+get_subscriptions <- function(gallery, request_params = list()) {
   request_method <- "GET"
   endpoint <- "/api/v1/workflows/subscription/"
 
-  request_url <-
-    get_request_url(gallery, endpoint, request_method, request_params)
-  response <- httr::GET(request_url)
+  content <- submit_request(gallery,
+                            endpoint,
+                            request_method,
+                            request_params)
 
-  return(response)
+  return(content)
 }
 
 #' Get App Questions
@@ -61,9 +76,80 @@ get_app_questions <- function(gallery, app_id) {
   endpoint <- "/api/v1/workflows/{appId}/questions/"
   endpoint <- gsub("\\{appId\\}", app_id, endpoint)
 
-  request_url <-
-    get_request_url(gallery, endpoint, request_method, request_params)
-  response <- httr::GET(request_url)
+  content <- submit_request(gallery,
+                            endpoint,
+                            request_method,
+                            request_params)
 
-  return(response)
+  return(content)
 }
+
+
+#' Get App Jobs
+#'
+#' Returns the jobs for the given Alteryx Analtytics App. Only app workflows
+#' can be used.
+#'
+#' @inheritParams get_request_url
+#' @inheritParams get_app_questions
+#' @export
+get_app_jobs <- function(gallery, app_id, request_params = list()) {
+  request_method <- "GET"
+  endpoint <- "/api/v1/workflows/{appId}/jobs/"
+  endpoint <- gsub("\\{appId\\}", app_id, endpoint)
+
+  content <- submit_request(gallery,
+                            endpoint,
+                            request_method,
+                            request_params)
+
+  return(content)
+}
+
+#' Get Job
+#'
+#' Retrieves the job and its current state. Only app workflows can be used.
+#'
+#' @inheritParams get_request_url
+#' @param job_id The ID of the job to retrieve.
+#' @export
+get_job <- function(gallery, job_id, request_params) {
+  request_method <- "GET"
+  endpoint <- "/api/v1/jobs/{jobId}/"
+  endpoint <- gsub("\\{jobId\\}", job_id, endpoint)
+
+  content <- submit_request(gallery,
+                            endpoint,
+                            request_method,
+                            request_params)
+
+  return(content)
+}
+
+#' Get Job Output
+#'
+#' Returns output for a given job. Only app workflows can be used.
+#'
+#' @inheritParams get_job
+#' @param output_id The ID for the output you want to retrieve.
+#' @export
+get_job_output <- function(gallery, job_id, output_id, request_params) {
+  request_method <- "GET"
+  endpoint <- "/api/v1/jobs/{jobId}/output/{outputId}/"
+  endpoint <- gsub("\\{jobId\\}", job_id, endpoint)
+  endpoint <- gsub("\\{outputId\\}", output_id, endpoint)
+
+  content <- submit_request(gallery,
+                            endpoint,
+                            request_method,
+                            request_params)
+
+  return(content)
+}
+
+# queue_app <- function(gallery, app_id, values) {
+#   request_method <- "POST"
+#   endpoint <- "/api/v1/workflows/{appId}/jobs/"
+#   endpoint <- gsub("\\{appId\\}", app_id, endpoint)
+#
+# }

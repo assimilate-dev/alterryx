@@ -4,7 +4,7 @@
 \alias{get_subscriptions}
 \title{Get Subscriptions}
 \usage{
-get_subscriptions(gallery, request_params)
+get_subscriptions(gallery, request_params = list())
 }
 \arguments{
 \item{gallery}{The url for your Alteryx Gallery}
