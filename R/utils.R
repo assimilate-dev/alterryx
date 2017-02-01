@@ -29,7 +29,3 @@ check_status <- function(response) {
 
   return(response)
 }
-
-# format_app_values <- function(name_value_pairs) {
-#   jsonlite::toJSON(list(questions = name_value_pairs), auto_unbox = TRUE)
-# }

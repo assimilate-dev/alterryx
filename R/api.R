@@ -26,16 +26,44 @@ get_request_url <- function(gallery,
   return(request_url)
 }
 
-#' Submit Request
+#' Submit Get Request
 #'
 #' @inheritParams get_request_url
-submit_request <- function(gallery,
-                           endpoint,
-                           request_method,
-                           request_params) {
+submit_get_request <- function(gallery,
+                               endpoint,
+                               request_params) {
+  request_method <- "GET"
   request_url <-
-    get_request_url(gallery, endpoint, request_method, request_params)
+    get_request_url(gallery,
+                    endpoint,
+                    request_method,
+                    request_params)
   response <- httr::GET(request_url)
+  response <- check_status(response)
+  content <- httr::content(response)
+
+  return(content)
+}
+
+#' Submit Post Request
+#'
+#' @inheritParams get_request_url
+#' @param request_body JSON body of request containing values for app questions
+#' built using \code{build_request_body}
+submit_post_request <- function(gallery,
+                                endpoint,
+                                request_body) {
+  request_method <- "POST"
+  request_params <- list()
+  request_url <-
+    get_request_url(gallery,
+                    endpoint,
+                    request_method,
+                    request_params)
+  response <- httr::POST(request_url,
+                         body = request_body,
+                         encode = "raw",
+                         httr::content_type_json())
   response <- check_status(response)
   content <- httr::content(response)
 
@@ -51,13 +79,11 @@ submit_request <- function(gallery,
 #' @inheritParams get_request_url
 #' @export
 get_subscriptions <- function(gallery, request_params = list()) {
-  request_method <- "GET"
   endpoint <- "/api/v1/workflows/subscription/"
 
-  content <- submit_request(gallery,
-                            endpoint,
-                            request_method,
-                            request_params)
+  content <- submit_get_request(gallery,
+                                endpoint,
+                                request_params)
 
   return(content)
 }
@@ -71,15 +97,13 @@ get_subscriptions <- function(gallery, request_params = list()) {
 #' @param app_id ID of the app for which you want to retrieve the questions
 #' @export
 get_app_questions <- function(gallery, app_id) {
-  request_method <- "GET"
   request_params <- list()
   endpoint <- "/api/v1/workflows/{appId}/questions/"
   endpoint <- gsub("\\{appId\\}", app_id, endpoint)
 
-  content <- submit_request(gallery,
-                            endpoint,
-                            request_method,
-                            request_params)
+  content <- submit_get_request(gallery,
+                                endpoint,
+                                request_params)
 
   return(content)
 }
@@ -94,14 +118,12 @@ get_app_questions <- function(gallery, app_id) {
 #' @inheritParams get_app_questions
 #' @export
 get_app_jobs <- function(gallery, app_id, request_params = list()) {
-  request_method <- "GET"
   endpoint <- "/api/v1/workflows/{appId}/jobs/"
   endpoint <- gsub("\\{appId\\}", app_id, endpoint)
 
-  content <- submit_request(gallery,
-                            endpoint,
-                            request_method,
-                            request_params)
+  content <- submit_get_request(gallery,
+                                endpoint,
+                                request_params)
 
   return(content)
 }
@@ -113,15 +135,13 @@ get_app_jobs <- function(gallery, app_id, request_params = list()) {
 #' @inheritParams get_request_url
 #' @param job_id The ID of the job to retrieve.
 #' @export
-get_job <- function(gallery, job_id, request_params) {
-  request_method <- "GET"
+get_job <- function(gallery, job_id, request_params = list()) {
   endpoint <- "/api/v1/jobs/{jobId}/"
   endpoint <- gsub("\\{jobId\\}", job_id, endpoint)
 
-  content <- submit_request(gallery,
-                            endpoint,
-                            request_method,
-                            request_params)
+  content <- submit_get_request(gallery,
+                                endpoint,
+                                request_params)
 
   return(content)
 }
@@ -133,23 +153,52 @@ get_job <- function(gallery, job_id, request_params) {
 #' @inheritParams get_job
 #' @param output_id The ID for the output you want to retrieve.
 #' @export
-get_job_output <- function(gallery, job_id, output_id, request_params) {
-  request_method <- "GET"
+get_job_output <- function(gallery, job_id, output_id, request_params = list()) {
   endpoint <- "/api/v1/jobs/{jobId}/output/{outputId}/"
   endpoint <- gsub("\\{jobId\\}", job_id, endpoint)
   endpoint <- gsub("\\{outputId\\}", output_id, endpoint)
 
-  content <- submit_request(gallery,
-                            endpoint,
-                            request_method,
-                            request_params)
+  content <- submit_get_request(gallery,
+                                endpoint,
+                                request_params)
 
   return(content)
 }
 
-# queue_app <- function(gallery, app_id, values) {
-#   request_method <- "POST"
-#   endpoint <- "/api/v1/workflows/{appId}/jobs/"
-#   endpoint <- gsub("\\{appId\\}", app_id, endpoint)
-#
-# }
+#' Build Request Body
+#'
+#' Build the JSON of name value pairs corresponding to app questions
+#'
+#' @param name_value a \code{list} containing the app question \code{name} and
+#' \code{value} pairs
+#' @param ... additional \code{name_value} pairs
+#' @export
+#' @examples
+#' first_question <- list(name = "a", value = "1")
+#' second_question <- list(name = "b", value = "2")
+#' build_request_body(first_question, second_question)
+build_request_body <- function(name_value, ...) {
+  questions <- list(name_value, ...)
+  jsonlite::toJSON(list(questions = questions), auto_unbox = TRUE)
+}
+
+#' Queue Job
+#'
+#' Queue an app execution job.
+#'
+#' @return Returns the ID of the job. Use the status request to get the results
+#' of the job.
+#' @inheritParams get_request_url
+#' @inheritParams get_app_jobs
+#' @inheritParams submit_post_request
+#' @export
+post_app_job <- function(gallery, app_id, request_body) {
+  endpoint <- "/api/v1/workflows/{appId}/jobs/"
+  endpoint <- gsub("\\{appId\\}", app_id, endpoint)
+
+  content <- submit_post_request(gallery,
+                                 endpoint,
+                                 request_body)
+
+  return(content)
+}

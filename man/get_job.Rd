@@ -4,7 +4,7 @@
 \alias{get_job}
 \title{Get Job}
 \usage{
-get_job(gallery, job_id, request_params)
+get_job(gallery, job_id, request_params = list())
 }
 \arguments{
 \item{gallery}{The url for your Alteryx Gallery}

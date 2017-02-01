@@ -41,8 +41,7 @@ make_base_url <- function(gallery, endpoint) {
 #' @param request_params List of request parameters
 normalize_request_params <- function(required_headers,
                                      request_params) {
-  request_params <- append(required_headers,
-                           request_params)
+  request_params <- append(required_headers, request_params)
   request_params <- encode_list(request_params)
   request_params <- request_params[sort(names(request_params))]
   request_params <-
@@ -91,6 +90,7 @@ sign_base_string <- function(base_string) {
 #' @param required_headers Required headers created with
 #' \code{make_required_headers}
 #' @param request_params List of request parameters
+#' such as \code{list(values = json_body)}
 make_signature <- function(gallery,
                            endpoint,
                            request_method,
@@ -98,7 +98,8 @@ make_signature <- function(gallery,
                            request_params) {
   base_url <- make_base_url(gallery, endpoint)
   normalized_request_params <-
-    normalize_request_params(required_headers, request_params)
+    normalize_request_params(required_headers,
+                             request_params)
   base_string <-
     make_base_string(request_method,
                      base_url,
