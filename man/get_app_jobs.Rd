@@ -7,11 +7,7 @@
 get_app_jobs(gallery, app_id, request_params = list())
 }
 \arguments{
-\item{gallery}{The url for your Alteryx Gallery}
-
 \item{app_id}{ID of the app for which you want to retrieve the questions}
-
-\item{request_params}{List of request parameters}
 }
 \description{
 Returns the jobs for the given Alteryx Analtytics App. Only app workflows

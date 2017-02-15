@@ -1,103 +1,40 @@
-#' Get Request URL
-#'
-#' This provides a manual way to access Alteryx Gallery endpoints
-#' but in general the specific endpoint functions should be used
-#' @param gallery The url for your Alteryx Gallery
-#' @param endpoint The api endpoint beginning and ending with "/"
-#' @param request_method HTTP request verb
-#' @param request_params List of request parameters
-#' @export
-get_request_url <- function(gallery,
-                            endpoint,
-                            request_method,
-                            request_params) {
-  required_headers <- make_required_headers()
-  oauth_signature <- make_signature(gallery,
-                                    endpoint,
-                                    request_method,
-                                    required_headers,
-                                    request_params)
-  params <- append(required_headers, request_params)
-  params <- append(params, list(oauth_signature = oauth_signature))
-  params <- params[sort(names(params))]
-  params <- paste0(names(params), '=', params, collapse = '&')
-  request_url <- paste0(gallery, endpoint, '?', params)
-
-  return(request_url)
-}
-
-#' Submit Get Request
-#'
-#' @inheritParams get_request_url
-submit_get_request <- function(gallery,
-                               endpoint,
-                               request_params) {
-  request_method <- "GET"
-  request_url <-
-    get_request_url(gallery,
-                    endpoint,
-                    request_method,
-                    request_params)
-  response <- httr::GET(request_url)
-  response <- check_status(response)
-  content <- httr::content(response)
-
-  return(content)
-}
-
-#' Submit Post Request
-#'
-#' @inheritParams get_request_url
-#' @param request_body JSON body of request containing values for app questions
-#' built using \code{build_request_body}
-submit_post_request <- function(gallery,
-                                endpoint,
-                                request_body) {
-  request_method <- "POST"
-  request_params <- list()
-  request_url <-
-    get_request_url(gallery,
-                    endpoint,
-                    request_method,
-                    request_params)
-  response <- httr::POST(request_url,
-                         body = request_body,
-                         encode = "raw",
-                         httr::content_type_json())
-  response <- check_status(response)
-  content <- httr::content(response)
-
-  return(content)
-}
-
 #' Get Subscriptions
 #'
 #' Get the workflows in a subscription. Subscription is tied to API key. You
 #' cannot request workflows for any other subscription without that
 #' subscription's key.
 #'
-#' @inheritParams get_request_url
+#' @inheritParams submit_get_request
 #' @export
-get_subscriptions <- function(gallery, request_params = list()) {
+get_apps <- function(gallery, request_params = list()) {
   endpoint <- "/api/v1/workflows/subscription/"
 
   content <- submit_get_request(gallery,
                                 endpoint,
                                 request_params)
 
+  if(length(content)) {
+    content <- lapply(content, alteryx_app)
+  } else {
+    content <- NULL
+  }
+
   return(content)
 }
 
 #' Get App Questions
 #'
-#' Get the questions for the given Alteryx Analtytics App. Only app workflows
+#' Get the questions for the given Alteryx Analtytic App. Only app workflows
 #' can be used.
-#'
-#' @inheritParams get_request_url
+#' @inheritParams submit_get_request
 #' @param app_id ID of the app for which you want to retrieve the questions
 #' @export
-get_app_questions <- function(gallery, app_id) {
+get_app_questions <- function(gallery, app) {
+  if(!is.alteryx_app(app))
+    stop("argument 'app' must be an object of class 'alteryx_app")
+
   request_params <- list()
+  app_id <- app$id
   endpoint <- "/api/v1/workflows/{appId}/questions/"
   endpoint <- gsub("\\{appId\\}", app_id, endpoint)
 
@@ -108,14 +45,12 @@ get_app_questions <- function(gallery, app_id) {
   return(content)
 }
 
-
 #' Get App Jobs
 #'
 #' Returns the jobs for the given Alteryx Analtytics App. Only app workflows
 #' can be used.
-#'
-#' @inheritParams get_request_url
 #' @inheritParams get_app_questions
+#' @inheritParams submit_get_request
 #' @export
 get_app_jobs <- function(gallery, app_id, request_params = list()) {
   endpoint <- "/api/v1/workflows/{appId}/jobs/"
@@ -131,17 +66,23 @@ get_app_jobs <- function(gallery, app_id, request_params = list()) {
 #' Get Job
 #'
 #' Retrieves the job and its current state. Only app workflows can be used.
-#'
-#' @inheritParams get_request_url
-#' @param job_id The ID of the job to retrieve.
+#' @inheritParams submit_get_request
+#' @param job_id The ID of the job to retrieve
 #' @export
-get_job <- function(gallery, job_id, request_params = list()) {
+get_job <- function(gallery, job, request_params = list()) {
+  if(!is.alteryx_job(job))
+    stop("argument 'job' must be an object of class 'alteryx_job")
+
   endpoint <- "/api/v1/jobs/{jobId}/"
+  job_id <- job$id
   endpoint <- gsub("\\{jobId\\}", job_id, endpoint)
 
   content <- submit_get_request(gallery,
                                 endpoint,
                                 request_params)
+
+  content <- add_parent(job, content)
+  content <- alteryx_job(content)
 
   return(content)
 }
@@ -149,29 +90,41 @@ get_job <- function(gallery, job_id, request_params = list()) {
 #' Get Job Output
 #'
 #' Returns output for a given job. Only app workflows can be used.
-#'
 #' @inheritParams get_job
 #' @param output_id The ID for the output you want to retrieve.
 #' @export
-get_job_output <- function(gallery, job_id, output_id, request_params = list()) {
-  endpoint <- "/api/v1/jobs/{jobId}/output/{outputId}/"
-  endpoint <- gsub("\\{jobId\\}", job_id, endpoint)
-  endpoint <- gsub("\\{outputId\\}", output_id, endpoint)
+get_job_output <- function(gallery, job, request_params = list()) {
+  if(job$status != "Completed")
+    stop("Job not complete. Cannot get output.")
+  if(!length(job$outputs))
+    stop("Job has no output.")
 
-  content <- submit_get_request(gallery,
-                                endpoint,
-                                request_params)
+  endpoint <- "/api/v1/jobs/{jobId}/output/{outputId}/"
+  job_id <- job$id
+  output_id <- lapply(job$outputs, function(x) {x$id})
+  endpoint <- gsub("\\{jobId\\}", job_id, endpoint)
+  endpoint <- lapply(output_id, function(x) {
+    gsub("\\{outputId\\}", x, endpoint)
+  })
+
+  content <-lapply(endpoint, function(x) {
+    submit_get_request(gallery,
+                       endpoint,
+                       request_params,
+                       as = "raw",
+                       remove_bom = FALSE,
+                       parse_JSON = FALSE)
+  })
 
   return(content)
 }
 
 #' Build Request Body
 #'
-#' Build the JSON of name value pairs corresponding to app questions
-#'
-#' @param name_value a \code{list} containing the app question \code{name} and
-#' \code{value} pairs
-#' @param ... additional \code{name_value} pairs
+#' Build the JSON of name value pairs corresponding to app questions for
+#' @param name_value \code{list} containing an app question \code{name} and
+#' \code{value} pair
+#' @param ... Additional \code{name_value} pairs
 #' @export
 #' @examples
 #' first_question <- list(name = "a", value = "1")
@@ -184,21 +137,28 @@ build_request_body <- function(name_value, ...) {
 
 #' Queue Job
 #'
-#' Queue an app execution job.
-#'
+#' Queue a job for an application
 #' @return Returns the ID of the job. Use the status request to get the results
 #' of the job.
-#' @inheritParams get_request_url
-#' @inheritParams get_app_jobs
 #' @inheritParams submit_post_request
+#' @param app_id ID of an app for which to queue a job
 #' @export
-post_app_job <- function(gallery, app_id, request_body) {
+post_app_job <- function(gallery, app, request_body) {
+  if(!is.alteryx_app(app))
+    stop("argument 'app' must be an object of class 'alteryx_app")
+
+  request_params <- list()
+  app_id <- app$id
   endpoint <- "/api/v1/workflows/{appId}/jobs/"
   endpoint <- gsub("\\{appId\\}", app_id, endpoint)
 
   content <- submit_post_request(gallery,
                                  endpoint,
+                                 request_params,
                                  request_body)
+
+  content <- add_parent(app, content)
+  content <- alteryx_job(content)
 
   return(content)
 }

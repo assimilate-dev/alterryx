@@ -4,15 +4,13 @@
 \alias{get_app_questions}
 \title{Get App Questions}
 \usage{
-get_app_questions(gallery, app_id)
+get_app_questions(gallery, app)
 }
 \arguments{
-\item{gallery}{The url for your Alteryx Gallery}
-
 \item{app_id}{ID of the app for which you want to retrieve the questions}
 }
 \description{
-Get the questions for the given Alteryx Analtytics App. Only app workflows
+Get the questions for the given Alteryx Analtytic App. Only app workflows
 can be used.
 }
 

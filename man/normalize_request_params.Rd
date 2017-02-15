@@ -8,11 +8,13 @@ normalize_request_params(required_headers, request_params)
 }
 \arguments{
 \item{required_headers}{Required headers created with
-\code{make_required_headers}}
+\code{build_required_headers}}
 
-\item{request_params}{List of request parameters}
+\item{request_params}{List of request parameters
+such as \code{list(values = json_body)}}
 }
 \description{
-Combine, sort, and url encode headers and param list
+Combine, sort, and percent encode headers and param list, part of the base
+string to be signed
 }
 

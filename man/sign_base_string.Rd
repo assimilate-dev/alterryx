@@ -7,7 +7,7 @@
 sign_base_string(base_string)
 }
 \arguments{
-\item{base_string}{base string created with \code{make_base_string}}
+\item{base_string}{Base string created with \code{build_base_string}}
 }
 \description{
 Sign Base String

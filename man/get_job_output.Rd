@@ -4,16 +4,10 @@
 \alias{get_job_output}
 \title{Get Job Output}
 \usage{
-get_job_output(gallery, job_id, output_id, request_params = list())
+get_job_output(gallery, job, request_params = list())
 }
 \arguments{
-\item{gallery}{The url for your Alteryx Gallery}
-
-\item{job_id}{The ID of the job to retrieve.}
-
 \item{output_id}{The ID for the output you want to retrieve.}
-
-\item{request_params}{List of request parameters}
 }
 \description{
 Returns output for a given job. Only app workflows can be used.

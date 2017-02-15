@@ -1,6 +1,16 @@
+#' Percent Encode List
+#'
+#' Percent encode all values in a list using \code{utils::URLencode()}
+#' @param l A \code{list}
+#' @param reserved logical: should ‘reserved’ characters be encoded?
+encode_list <- function(l, reserved = TRUE) {
+  lapply(l, function(x) {
+    utils::URLencode(x, reserved = reserved)
+  })
+}
+
 #' Generate Nonce
-make_nonce <- function() {
-  #random::randomStrings(n = 1, len = 20, upperalpha = FALSE)[1]
+generate_nonce <- function() {
   basename(tempfile(pattern = ""))
 }
 
@@ -8,8 +18,8 @@ make_nonce <- function() {
 #'
 #' Alteryx Gallery requests require headers consumer_key, signature_method,
 #' timestamp, nonce, and version.
-make_required_headers <- function() {
-  oauth_nonce <- make_nonce()
+generate_required_headers <- function() {
+  oauth_nonce <- generate_nonce()
   oauth_timestamp <- as.character(as.integer(Sys.time()))
   required_headers <- list(
     oauth_consumer_key = getOption("alteryx_api_key"),
@@ -22,23 +32,22 @@ make_required_headers <- function() {
   return(required_headers)
 }
 
-#' Make Base Url
+#' Build Base Url
 #'
-#' Create and url encode the base url
-#' @inheritParams make_signature
-make_base_url <- function(gallery, endpoint) {
+#' Create and percent encode the base URL, part of the base string to be signed
+#' @inheritParams build_signature
+build_base_url <- function(gallery, endpoint) {
   base_url <- paste0(gallery, endpoint)
-  base_url <- utils::URLencode(base_url)
+  base_url <- utils::URLencode(base_url, reserved = TRUE)
 
   return(base_url)
 }
 
 #' Normalize Request Parameters
 #'
-#' Combine, sort, and url encode headers and param list
-#' @param required_headers Required headers created with
-#' \code{make_required_headers}
-#' @param request_params List of request parameters
+#' Combine, sort, and percent encode headers and param list, part of the base
+#' string to be signed
+#' @inheritParams build_signature
 normalize_request_params <- function(required_headers,
                                      request_params) {
   request_params <- append(required_headers, request_params)
@@ -50,16 +59,16 @@ normalize_request_params <- function(required_headers,
   return(request_params)
 }
 
-#' Make Base String
+#' Build Base String
 #'
 #' Create the base string to be signed
-#' @param request_method HTTP request verb
-#' @param base_url Base url created with \code{make_base_url}
+#' @param request_method Character vector containing an HTTP request verb
+#' @param base_url Base URL created with \code{build_base_url}
 #' @param normalized_request_params Normalized request parameters created with
 #' \code{normalize_request_params}
-make_base_string <- function(request_method,
-                             base_url,
-                             normalized_request_params) {
+build_base_string <- function(request_method,
+                              base_url,
+                              normalized_request_params) {
   base_string <- list(request_method,
                       base_url,
                       normalized_request_params)
@@ -71,7 +80,7 @@ make_base_string <- function(request_method,
 
 #' Sign Base String
 #'
-#' @param base_string base string created with \code{make_base_string}
+#' @param base_string Base string created with \code{build_base_string}
 sign_base_string <- function(base_string) {
   signing_key <- paste0(getOption("alteryx_secret_key"), "&")
   signature <-
@@ -84,26 +93,26 @@ sign_base_string <- function(base_string) {
 
 #' Make Signature
 #'
-#' @param gallery The url an Alteryx Gallery
-#' @param endpoint The api endpoint beginning and ending with "/"
+#' @param gallery URL of an Alteryx Gallery
+#' @param endpoint API endpoint beginning and ending with "/"
 #' @param request_method HTTP request verb
 #' @param required_headers Required headers created with
-#' \code{make_required_headers}
+#' \code{build_required_headers}
 #' @param request_params List of request parameters
 #' such as \code{list(values = json_body)}
-make_signature <- function(gallery,
-                           endpoint,
-                           request_method,
-                           required_headers,
-                           request_params) {
-  base_url <- make_base_url(gallery, endpoint)
+build_signature <- function(gallery,
+                            endpoint,
+                            request_method,
+                            required_headers,
+                            request_params) {
+  base_url <- build_base_url(gallery, endpoint)
   normalized_request_params <-
     normalize_request_params(required_headers,
                              request_params)
   base_string <-
-    make_base_string(request_method,
-                     base_url,
-                     normalized_request_params)
+    build_base_string(request_method,
+                      base_url,
+                      normalized_request_params)
   signature <- sign_base_string(base_string)
 
   return(signature)

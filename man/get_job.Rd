@@ -4,14 +4,10 @@
 \alias{get_job}
 \title{Get Job}
 \usage{
-get_job(gallery, job_id, request_params = list())
+get_job(gallery, job, request_params = list())
 }
 \arguments{
-\item{gallery}{The url for your Alteryx Gallery}
-
-\item{job_id}{The ID of the job to retrieve.}
-
-\item{request_params}{List of request parameters}
+\item{job_id}{The ID of the job to retrieve}
 }
 \description{
 Retrieves the job and its current state. Only app workflows can be used.

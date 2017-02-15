@@ -4,21 +4,19 @@
 \alias{post_app_job}
 \title{Queue Job}
 \usage{
-post_app_job(gallery, app_id, request_body)
+post_app_job(gallery, app, request_body)
 }
 \arguments{
-\item{gallery}{The url for your Alteryx Gallery}
-
-\item{app_id}{ID of the app for which you want to retrieve the questions}
-
 \item{request_body}{JSON body of request containing values for app questions
 built using \code{build_request_body}}
+
+\item{app_id}{ID of an app for which to queue a job}
 }
 \value{
 Returns the ID of the job. Use the status request to get the results
 of the job.
 }
 \description{
-Queue an app execution job.
+Queue a job for an application
 }
 
