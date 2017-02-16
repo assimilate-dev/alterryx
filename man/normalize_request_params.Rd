@@ -10,8 +10,7 @@ normalize_request_params(required_headers, request_params)
 \item{required_headers}{Required headers created with
 \code{build_required_headers}}
 
-\item{request_params}{List of request parameters
-such as \code{list(values = json_body)}}
+\item{request_params}{List of request parameters}
 }
 \description{
 Combine, sort, and percent encode headers and param list, part of the base

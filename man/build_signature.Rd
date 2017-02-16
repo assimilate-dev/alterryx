@@ -17,8 +17,7 @@ build_signature(gallery, endpoint, request_method, required_headers,
 \item{required_headers}{Required headers created with
 \code{build_required_headers}}
 
-\item{request_params}{List of request parameters
-such as \code{list(values = json_body)}}
+\item{request_params}{List of request parameters}
 }
 \description{
 Make Signature

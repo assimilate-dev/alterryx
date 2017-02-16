@@ -4,13 +4,27 @@
 \alias{get_app_questions}
 \title{Get App Questions}
 \usage{
-get_app_questions(gallery, app)
+get_app_questions(app, gallery = getOption("alteryx_gallery"))
 }
 \arguments{
-\item{app_id}{ID of the app for which you want to retrieve the questions}
+\item{app}{An \code{alteryx_app} returned from \code{\link{get_app}}}
+
+\item{gallery}{URL for your Alteryx Gallery}
 }
 \description{
+Most Alteryx apps have questions, user input that defines how
+the application should run. The answers to these questions need to be sent
+as \code{request_body} when queueing an application on Gallery with
+\code{\link{post_app_job}}. \code{get_app_questions} returns the names,
+types, and default values of the questions for an app.
+}
+\details{
 Get the questions for the given Alteryx Analtytic App. Only app workflows
 can be used.
+}
+\section{WARNING}{
+
+Trees, Maps, and File Browse are unsupported question types. This is a
+limitation of Alteryx Gallery and not this API client.
 }
 

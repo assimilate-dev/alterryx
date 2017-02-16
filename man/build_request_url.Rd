@@ -16,7 +16,6 @@ build_request_url(gallery, endpoint, request_method, request_params)
 \item{request_params}{List of request parameters}
 }
 \description{
-This provides a manual way to build a request URL but in general this
-should be handled by the specific endpoint functions
+Build Request URL
 }
 

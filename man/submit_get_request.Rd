@@ -13,11 +13,9 @@ submit_get_request(gallery, endpoint, request_params, ...)
 
 \item{request_params}{List of request parameters}
 
-\item{...}{Additional arguments passed to \code{httr::GET()} such as
-\code{verbose()}}
+\item{...}{Additional arguments passed to \code{parse_request_response}}
 }
 \description{
-This provides a manual way to submit a GET request but in general this
-should be handled by the specific endpoint functions
+Submit GET Request
 }
 

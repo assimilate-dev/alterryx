@@ -13,14 +13,11 @@ submit_post_request(gallery, endpoint, request_params, request_body, ...)
 
 \item{request_params}{List of request parameters}
 
-\item{request_body}{JSON body of request containing values for app questions
-built using \code{build_request_body}}
+\item{request_body}{JSON body of request containing values for app questions}
 
-\item{...}{Additional arguments passed to \code{httr::POST()} such as
-\code{verbose}}
+\item{...}{Additional arguments passed to \code{parse_request_response}}
 }
 \description{
-This provides a manual way to submit a POST request but in general this
-should be handled by the specific endpoint functions
+Submit POST Request
 }
 

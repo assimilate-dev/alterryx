@@ -99,7 +99,6 @@ sign_base_string <- function(base_string) {
 #' @param required_headers Required headers created with
 #' \code{build_required_headers}
 #' @param request_params List of request parameters
-#' such as \code{list(values = json_body)}
 build_signature <- function(gallery,
                             endpoint,
                             request_method,
