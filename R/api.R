@@ -40,7 +40,7 @@ get_app <- function(request_params = list(),
                                 request_params)
 
   if(length(content)) {
-    content <- lapply(content, alteryx_app)
+    content <- lapply(content, as.alteryx_app)
   } else {
     content <- NULL
   }
@@ -50,13 +50,13 @@ get_app <- function(request_params = list(),
 
 #' Get App Questions
 #'
-#' Get the questions for the given Alteryx Analtytic App. Only app workflows
-#' can be used.
+#' @description Get the questions for the given Alteryx Analtytic App. Only app
+#' workflows can be used.
 #'
-#' @description Most Alteryx apps have questions, user input that defines how
+#' @details Most Alteryx apps have questions, user input that defines how
 #' the application should run. The answers to these questions need to be sent
 #' as \code{request_body} when queueing an application on Gallery with
-#' \code{\link{post_app_job}}. \code{get_app_questions} returns the names,
+#' \code{post_app_job}. \code{get_app_questions} returns the names,
 #' types, and default values of the questions for an app.
 #'
 #' @section WARNING:
@@ -86,10 +86,8 @@ get_app_questions <- function(app,
 
 #' Get App Jobs
 #'
-#' Get the status of jobs running in Alteryx Gallery
-#'
 #' @description A job is a single run of an app. To queue a job for an app use
-#' \code{\link{queue_app}}. Once queued, there are two ways to poll the gallery
+#' \code{queue_app}. Once queued, there are two ways to poll the gallery
 #' for an update on the job status: \code{get_app_jobs} or \code{get_job}.
 #'
 #' \code{get_app_jobs} will return all jobs for a given app.
@@ -102,7 +100,9 @@ get_app_questions <- function(app,
 #' @inheritParams get_app
 #' @param app An Alteryx app returned from \code{\link{get_app}}
 #' @param job An Alteryx job returned from \code{get_app_jobs} or
-#' \code{\link{post_app_job}}
+#' \code{post_app_jobs}
+#'
+#' @aliases get_app_jobs get_job
 #'
 #' @examples
 #' \dontrun{
@@ -152,15 +152,12 @@ get_job <- function(job,
                                 endpoint,
                                 request_params)
 
-  content <- add_parent(job, content)
-  content <- alteryx_job(content)
+  content <- as.alteryx_job(content, job)
 
   return(content)
 }
 
 #' Manage Job Output
-#'
-#' Get the default names and download outputs from an Alteryx job.
 #'
 #' @description If an Alteryx app includes one or more output tools inside the
 #' application, the output will be available for download once the job is
@@ -172,9 +169,11 @@ get_job <- function(job,
 #'
 #' @inheritParams get_app
 #' @param job An completed Alteryx job returned from \code{get_app_jobs} or
-#' \code{\link{post_app_job}}
+#' \code{post_app_job}
 #' @param filename A character vector of filenames for the output
 #' @param download_directory Directory in which to write the outputs
+#'
+#' @aliases job_output download_job_output
 #'
 #' @name manage_job_output
 NULL
@@ -264,6 +263,8 @@ download_job_output <- function(job,
 #' @param name_value \code{list} containing an app question name and value pair
 #' @param ... Additional \code{name_value} pairs
 #'
+#' @aliases queue_job build_answers
+#'
 #' @examples
 #' \dontrun{
 #' first_question <- list(name = "a", value = "1")
@@ -293,8 +294,7 @@ queue_job <- function(app,
                                  request_params,
                                  request_body = answers)
 
-  content <- add_parent(app, content)
-  content <- alteryx_job(content)
+  content <- as.alteryx_job(content, app)
 
   return(content)
 }

@@ -13,4 +13,3 @@ or \code{httr::POST}}
 \description{
 Error handling for non-200 status codes
 }
-

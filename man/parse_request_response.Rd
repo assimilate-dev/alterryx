@@ -20,4 +20,3 @@ or \code{httr::POST}}
 \description{
 Parse Request Response
 }
-

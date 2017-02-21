@@ -18,4 +18,3 @@ build_request_url(gallery, endpoint, request_method, request_params)
 \description{
 Build Request URL
 }
-

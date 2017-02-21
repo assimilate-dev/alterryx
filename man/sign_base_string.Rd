@@ -12,4 +12,3 @@ sign_base_string(base_string)
 \description{
 Sign Base String
 }
-

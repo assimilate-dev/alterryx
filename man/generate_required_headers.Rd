@@ -10,4 +10,3 @@ generate_required_headers()
 Alteryx Gallery requests require headers consumer_key, signature_method,
 timestamp, nonce, and version.
 }
-

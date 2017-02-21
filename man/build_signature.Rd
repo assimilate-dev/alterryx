@@ -22,4 +22,3 @@ build_signature(gallery, endpoint, request_method, required_headers,
 \description{
 Make Signature
 }
-

@@ -18,4 +18,3 @@ submit_get_request(gallery, endpoint, request_params, ...)
 \description{
 Submit GET Request
 }
-

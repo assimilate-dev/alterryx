@@ -14,4 +14,3 @@ build_base_url(gallery, endpoint)
 \description{
 Create and percent encode the base URL, part of the base string to be signed
 }
-

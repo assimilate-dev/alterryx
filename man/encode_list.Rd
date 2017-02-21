@@ -14,4 +14,3 @@ encode_list(l, reserved = TRUE)
 \description{
 Percent encode all values in a list using \code{utils::URLencode()}
 }
-

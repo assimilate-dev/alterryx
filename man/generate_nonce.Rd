@@ -9,4 +9,3 @@ generate_nonce()
 \description{
 Generate Nonce
 }
-

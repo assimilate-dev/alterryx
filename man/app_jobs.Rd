@@ -4,6 +4,8 @@
 \alias{app_jobs}
 \alias{get_app_jobs}
 \alias{get_job}
+\alias{get_app_jobs}
+\alias{get_job}
 \title{Get App Jobs}
 \usage{
 get_app_jobs(app, request_params = list(),
@@ -21,24 +23,22 @@ parameters, visit the Alteryx Gallery API documentation
 \item{gallery}{URL for your Alteryx Gallery}
 
 \item{job}{An Alteryx job returned from \code{get_app_jobs} or
-\code{\link{post_app_job}}}
+\code{post_app_jobs}}
 }
 \description{
 A job is a single run of an app. To queue a job for an app use
-\code{\link{queue_app}}. Once queued, there are two ways to poll the gallery
+\code{queue_app}. Once queued, there are two ways to poll the gallery
 for an update on the job status: \code{get_app_jobs} or \code{get_job}.
 
 \code{get_app_jobs} will return all jobs for a given app.
 \code{get_job} will return a single job
-}
-\details{
-Get the status of jobs running in Alteryx Gallery
 }
 \section{See Also}{
 
 Once a job is complete, use \code{\link{download_job_output}} to retrieve
 the results.
 }
+
 \examples{
 \dontrun{
 # get the five most recently queued jobs for an app
@@ -50,4 +50,3 @@ request_params <- list(
 get_app_jobs(app, request_params)
 }
 }
-

@@ -20,4 +20,3 @@ submit_post_request(gallery, endpoint, request_params, request_body, ...)
 \description{
 Submit POST Request
 }
-

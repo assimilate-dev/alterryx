@@ -1,4 +1,18 @@
-alteryx_app <- function(x) {
+#' @title Alteryx Applications
+#'
+#' @description Handling of application resources returned by the Alteryx
+#' Gallery API. For more information, see \code{\link{get_app}}
+#'
+#' @exportClass alteryx_app
+#' @rdname alteryx_app
+#
+
+#' @rdname alteryx_app
+#'
+#' @param x A \code{list} of values pertaining to an Alteryx app returned from
+#' the Alteryx Gallery API
+#' @export
+as.alteryx_app <- function(x) {
   expected <- list("id" = "character",
                    "subscriptionId" = "character",
                    "public" = "logical",
@@ -19,7 +33,11 @@ alteryx_app <- function(x) {
   return(x)
 }
 
-is.alteryx_app <- function(x) inherits(x, "alteryx_app")
+#' @rdname alteryx_app
+#'
+#' @param object An R object
+#' @export
+is.alteryx_app <- function(object) inherits(object, "alteryx_app")
 
 #' @export
 format.alteryx_app <- function(x, ...) {

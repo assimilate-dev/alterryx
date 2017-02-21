@@ -16,4 +16,3 @@ normalize_request_params(required_headers, request_params)
 Combine, sort, and percent encode headers and param list, part of the base
 string to be signed
 }
-

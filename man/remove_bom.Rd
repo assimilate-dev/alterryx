@@ -12,4 +12,3 @@ remove_bom(content)
 \description{
 Remove Byte Order Mark
 }
-

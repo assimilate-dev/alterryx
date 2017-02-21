@@ -12,15 +12,15 @@ get_app_questions(app, gallery = getOption("alteryx_gallery"))
 \item{gallery}{URL for your Alteryx Gallery}
 }
 \description{
+Get the questions for the given Alteryx Analtytic App. Only app
+workflows can be used.
+}
+\details{
 Most Alteryx apps have questions, user input that defines how
 the application should run. The answers to these questions need to be sent
 as \code{request_body} when queueing an application on Gallery with
-\code{\link{post_app_job}}. \code{get_app_questions} returns the names,
+\code{post_app_job}. \code{get_app_questions} returns the names,
 types, and default values of the questions for an app.
-}
-\details{
-Get the questions for the given Alteryx Analtytic App. Only app workflows
-can be used.
 }
 \section{WARNING}{
 

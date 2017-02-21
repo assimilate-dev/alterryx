@@ -28,6 +28,7 @@ subscription including macros and workflows in addition to applications. You
 cannot run workflows or macros using the Alteryx Gallery API and if you try
 to do so you will receive an error.
 }
+
 \examples{
 \dontrun{
 # get the five most recently uploaded apps in your studio
@@ -42,4 +43,3 @@ get_app(request_params)
 }
 
 }
-

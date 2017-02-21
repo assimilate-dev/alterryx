@@ -17,4 +17,3 @@ build_base_string(request_method, base_url, normalized_request_params)
 \description{
 Create the base string to be signed
 }
-

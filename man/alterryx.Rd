@@ -15,4 +15,3 @@ For more information about the Alteryx Gallery API, see the documentation
 To learn more about alterryx, start with the vignettes:
 \code{browseVignettes(package = "alterryx")}
 }
-
