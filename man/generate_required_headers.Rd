@@ -2,11 +2,10 @@
 % Please edit documentation in R/signature.R
 \name{generate_required_headers}
 \alias{generate_required_headers}
-\title{Generate Required Headers}
+\title{Generate the request headers required by Alteryx Gallery}
 \usage{
 generate_required_headers()
 }
 \description{
-Alteryx Gallery requests require headers consumer_key, signature_method,
-timestamp, nonce, and version.
+Generate the request headers required by Alteryx Gallery
 }

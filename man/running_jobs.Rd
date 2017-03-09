@@ -33,8 +33,8 @@ to be run. The answers to the app questions are formatted using
 \code{build_answers}. To see the required questions for an app use
 \code{\link{get_app_questions}}.
 
-Use \code{post_app_job} to queue a job for an app. A job is a single run of
-an app run according to the answers submitted.
+Use \code{\link{queue_job}} to queue a job for an app. A job is a single run
+of an app run according to the answers submitted.
 }
 \section{See Also}{
 
@@ -52,4 +52,5 @@ answers <- build_answers(first_question, second_question)
 
 new_job <- queue_job(app, answers)
 }
+
 }

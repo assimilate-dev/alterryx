@@ -1,6 +1,5 @@
-#' Percent Encode List
+#' Percent encode all values in a list using \code{utils::URLencode}
 #'
-#' Percent encode all values in a list using \code{utils::URLencode()}
 #' @param l A \code{list}
 #' @param reserved logical: should ‘reserved’ characters be encoded?
 encode_list <- function(l, reserved = TRUE) {
@@ -14,10 +13,7 @@ generate_nonce <- function() {
   basename(tempfile(pattern = ""))
 }
 
-#' Generate Required Headers
-#'
-#' Alteryx Gallery requests require headers consumer_key, signature_method,
-#' timestamp, nonce, and version.
+#' Generate the request headers required by Alteryx Gallery
 generate_required_headers <- function() {
   oauth_nonce <- generate_nonce()
   oauth_timestamp <- as.character(as.integer(Sys.time()))
@@ -32,9 +28,8 @@ generate_required_headers <- function() {
   return(required_headers)
 }
 
-#' Build Base Url
-#'
 #' Create and percent encode the base URL, part of the base string to be signed
+#'
 #' @inheritParams build_signature
 build_base_url <- function(gallery, endpoint) {
   base_url <- paste0(gallery, endpoint)
@@ -43,10 +38,9 @@ build_base_url <- function(gallery, endpoint) {
   return(base_url)
 }
 
-#' Normalize Request Parameters
-#'
 #' Combine, sort, and percent encode headers and param list, part of the base
 #' string to be signed
+#'
 #' @inheritParams build_signature
 normalize_request_params <- function(required_headers,
                                      request_params) {
@@ -59,9 +53,8 @@ normalize_request_params <- function(required_headers,
   return(request_params)
 }
 
-#' Build Base String
-#'
 #' Create the base string to be signed
+#'
 #' @param request_method Character vector containing an HTTP request verb
 #' @param base_url Base URL created with \code{build_base_url}
 #' @param normalized_request_params Normalized request parameters created with

@@ -11,6 +11,7 @@
 #'
 #' @param x A \code{list} of values pertaining to an Alteryx app returned from
 #' the Alteryx Gallery API
+#'
 #' @export
 as.alteryx_app <- function(x) {
   expected <- list("id" = "character",
@@ -36,12 +37,13 @@ as.alteryx_app <- function(x) {
 #' @rdname alteryx_app
 #'
 #' @param object An R object
+#'
 #' @export
 is.alteryx_app <- function(object) inherits(object, "alteryx_app")
 
 #' @export
 format.alteryx_app <- function(x, ...) {
-  paste0(x$fileName, ", app_id:", x$id)
+  paste0(x$fileName, ", id:", x$id)
 }
 
 #' @export

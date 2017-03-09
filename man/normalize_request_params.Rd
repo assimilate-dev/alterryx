@@ -2,7 +2,8 @@
 % Please edit documentation in R/signature.R
 \name{normalize_request_params}
 \alias{normalize_request_params}
-\title{Normalize Request Parameters}
+\title{Combine, sort, and percent encode headers and param list, part of the base
+string to be signed}
 \usage{
 normalize_request_params(required_headers, request_params)
 }

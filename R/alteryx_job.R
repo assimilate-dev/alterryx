@@ -4,6 +4,7 @@
 #' Gallery API. For more information, see \code{\link{get_job}}.
 #'
 #' @exportClass alteryx_job
+#'
 #' @rdname alteryx_job
 #
 
@@ -13,6 +14,7 @@
 #' the Alteryx Gallery API
 #' @param parent An \code{alteryx_app} or \code{alteryx_job} containing the id
 #' and name information of the parent application for a job.
+#'
 #' @export
 as.alteryx_job <- function(x, parent) {
   add_parent <- function(job, parent) {
@@ -48,6 +50,7 @@ as.alteryx_job <- function(x, parent) {
 #' @rdname alteryx_job
 #'
 #' @param object An R object
+#'
 #' @export
 is.alteryx_job <- function(object) inherits(object, "alteryx_job")
 

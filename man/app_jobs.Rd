@@ -23,7 +23,7 @@ parameters, visit the Alteryx Gallery API documentation
 \item{gallery}{URL for your Alteryx Gallery}
 
 \item{job}{An Alteryx job returned from \code{get_app_jobs} or
-\code{post_app_jobs}}
+\code{queue_jobs}}
 }
 \description{
 A job is a single run of an app. To queue a job for an app use
@@ -31,11 +31,12 @@ A job is a single run of an app. To queue a job for an app use
 for an update on the job status: \code{get_app_jobs} or \code{get_job}.
 
 \code{get_app_jobs} will return all jobs for a given app.
-\code{get_job} will return a single job
+\code{get_job} will return a single job and is mostly used for polling the
+status of a job.
 }
 \section{See Also}{
 
-Once a job is complete, use \code{\link{download_job_output}} to retrieve
+Once a job is complete, use \code{\link{get_job_output}} to retrieve
 the results.
 }
 
@@ -49,4 +50,5 @@ request_params <- list(
 
 get_app_jobs(app, request_params)
 }
+
 }

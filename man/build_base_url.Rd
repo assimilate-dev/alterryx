@@ -2,7 +2,7 @@
 % Please edit documentation in R/signature.R
 \name{build_base_url}
 \alias{build_base_url}
-\title{Build Base Url}
+\title{Create and percent encode the base URL, part of the base string to be signed}
 \usage{
 build_base_url(gallery, endpoint)
 }

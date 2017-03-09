@@ -2,7 +2,7 @@
 % Please edit documentation in R/signature.R
 \name{build_base_string}
 \alias{build_base_string}
-\title{Build Base String}
+\title{Create the base string to be signed}
 \usage{
 build_base_string(request_method, base_url, normalized_request_params)
 }

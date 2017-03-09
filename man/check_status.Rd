@@ -2,7 +2,7 @@
 % Please edit documentation in R/request.R
 \name{check_status}
 \alias{check_status}
-\title{Check Response Status}
+\title{Error handling for non-200 status codes}
 \usage{
 check_status(response)
 }

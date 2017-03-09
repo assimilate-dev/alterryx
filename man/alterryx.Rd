@@ -4,13 +4,19 @@
 \name{alterryx}
 \alias{alterryx}
 \alias{alterryx-package}
-\title{alterryx: an api client for the alteryx gallery}
+\title{alterryx: An API client for the Alteryx Gallery}
 \description{
-alterryx provides functions to access each of the alteryx gallery api
-endpoints.
+\code{alterryx} provides access to each of the Alteryx Gallery API
+endpoints. With \code{alterryx} users can:
 }
 \details{
-For more information about the Alteryx Gallery API, see the documentation
+* Retrieve information on Alteryx Gallery resouces like apps, workflows, and
+macros
+* Queue jobs for applications
+* Retrieve the status and output of jobs
+
+For more information about the Alteryx Gallery API, see the documentation:
+\url{https://gallery.alteryx.com/api-docs/}
 
 To learn more about alterryx, start with the vignettes:
 \code{browseVignettes(package = "alterryx")}

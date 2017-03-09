@@ -56,7 +56,7 @@ get_app <- function(request_params = list(),
 #' @details Most Alteryx apps have questions, user input that defines how
 #' the application should run. The answers to these questions need to be sent
 #' as \code{request_body} when queueing an application on Gallery with
-#' \code{post_app_job}. \code{get_app_questions} returns the names,
+#' \code{queue_job}. \code{get_app_questions} returns the names,
 #' types, and default values of the questions for an app.
 #'
 #' @section WARNING:
@@ -91,16 +91,17 @@ get_app_questions <- function(app,
 #' for an update on the job status: \code{get_app_jobs} or \code{get_job}.
 #'
 #' \code{get_app_jobs} will return all jobs for a given app.
-#' \code{get_job} will return a single job
+#' \code{get_job} will return a single job and is mostly used for polling the
+#' status of a job.
 #'
 #' @section See Also:
-#' Once a job is complete, use \code{\link{download_job_output}} to retrieve
+#' Once a job is complete, use \code{\link{get_job_output}} to retrieve
 #' the results.
 #'
 #' @inheritParams get_app
 #' @param app An Alteryx app returned from \code{\link{get_app}}
 #' @param job An Alteryx job returned from \code{get_app_jobs} or
-#' \code{post_app_jobs}
+#' \code{queue_jobs}
 #'
 #' @aliases get_app_jobs get_job
 #'
@@ -114,10 +115,12 @@ get_app_questions <- function(app,
 #'
 #' get_app_jobs(app, request_params)
 #' }
+#'
 #' @name app_jobs
 NULL
 
 #' @rdname app_jobs
+#'
 #' @export
 get_app_jobs <- function(app,
                          request_params = list(),
@@ -137,6 +140,7 @@ get_app_jobs <- function(app,
 }
 
 #' @rdname app_jobs
+#'
 #' @export
 get_job <- function(job,
                     gallery = getOption("alteryx_gallery")) {
@@ -157,85 +161,76 @@ get_job <- function(job,
   return(content)
 }
 
-#' Manage Job Output
+#' Get Job Output
 #'
 #' @description If an Alteryx app includes one or more output tools inside the
 #' application, the output will be available for download once the job is
 #' complete.
 #'
-#' Use \code{job_output} to get information about the job outputs.
-#' Use \code{download_job_output} to download the job outputs and save them on
-#' your local machine.
+#' Use \code{get_job_output} to get the job outputs as a \code{data.frame}
+#'
+#' @section WARNING:
+#' In order to retrieve the results for a job as a \code{data.frame}, the
+#' from the Alteryx app that is published to your gallery must have an output
+#' format of csv or yxdb. Otherwise, it cannot be properly converted. If you
+#' have multiple outputs, some of which cannot be converted, this function will
+#' issue a warning and skip the invalid outputs. Use \code{queit = TRUE} to
+#' skip the outputs without warning.
+#'
+#' @return A \code{list} containing a \code{data.frame} for each valid output
+#' of an Alteryx app. Valid means that the output can be converted as explained
+#' in the WARNING section.
 #'
 #' @inheritParams get_app
-#' @param job An completed Alteryx job returned from \code{get_app_jobs} or
-#' \code{post_app_job}
-#' @param filename A character vector of filenames for the output
-#' @param download_directory Directory in which to write the outputs
+#' @param job An completed Alteryx job returned from \code{get_app_jobs}
+#' @param quiet Set to \code{TRUE} to ignore the warnings of skipped, invalid
+#' outputs
 #'
-#' @aliases job_output download_job_output
-#'
-#' @name manage_job_output
-NULL
-
-#' @rdname manage_job_output
 #' @export
-job_output <- function(job) {
+get_job_output <- function(job,
+                           gallery = getOption("alteryx_gallery"),
+                           quiet = FALSE) {
   if(job$status != "Completed")
     stop("Job not complete. Cannot get output.")
   if(!length(job$outputs))
     stop("Job has no output.")
 
-  job_output <- lapply(job$outputs, function(x) {
-    x$id
+  outputs <- job$outputs
+  valid_outputs <- lapply(outputs, function(x) {
+    "Csv" %in% unlist(x$formats)
   })
-  job_output_name <- lapply(job$outputs, function(x) {
-    x$name
-  })
-  names(job_output) <- unlist(job_output_name)
+  valid_outputs <- outputs[unlist(valid_outputs)]
 
-  return(job_output)
-}
-
-#' @rdname manage_job_output
-#' @export
-download_job_output <- function(job,
-                                filename = names(job_output(job)),
-                                download_directory = tempdir(),
-                                request_params = list(),
-                                gallery = getOption("alteryx_gallery")) {
-  if(job$status != "Completed")
-    stop("Job not complete. Cannot get output.")
-  if(!length(job$outputs))
-    stop("Job has no output.")
+  if(length(outputs) != length(valid_outputs) && !quiet)
+    warning("All outputs not valid to read as a data.frame and will be skipped.
+            See ??get_job_output for more information.")
 
   endpoint <- "/api/v1/jobs/{jobId}/output/{outputId}/"
   job_id <- job$id
-  output_id <- lapply(job$outputs, function(x) {x$id})
+  output_id <- lapply(valid_outputs, function(x) {x$id})
   endpoint <- gsub("\\{jobId\\}", job_id, endpoint)
   endpoint <- lapply(output_id, function(x) {
     gsub("\\{outputId\\}", x, endpoint)
   })
 
   request_params <- list(
-    format = ".csv"
+    format = "Csv"
   )
 
   content <-lapply(endpoint, function(x) {
     submit_get_request(gallery,
-                       endpoint,
+                       x,
                        request_params,
                        as = "raw",
                        remove_bom = FALSE,
                        parse_JSON = FALSE)
   })
 
-  lapply(seq_along(content), function(r, n, i) {
-    write_location <- file.path(download_directory, n[i])
-    writeBin(r[[1]], write_location)
-  }, r = content, n = filename)
+  job_output <- lapply(content, function(x) {
+    read.csv(textConnection(rawToChar(x)))
+  })
 
-  return(download_directory)
+  return(job_output)
 }
 
 #' Queue Job for an App
@@ -245,8 +240,8 @@ download_job_output <- function(job,
 #' \code{build_answers}. To see the required questions for an app use
 #' \code{\link{get_app_questions}}.
 #'
-#' Use \code{post_app_job} to queue a job for an app. A job is a single run of
-#' an app run according to the answers submitted.
+#' Use \code{\link{queue_job}} to queue a job for an app. A job is a single run
+#' of an app run according to the answers submitted.
 #'
 #' @section See Also:
 #' Use \code{\link{get_app}} to find apps to queue.
@@ -273,10 +268,12 @@ download_job_output <- function(job,
 #'
 #' new_job <- queue_job(app, answers)
 #' }
+#'
 #' @name running_jobs
 NULL
 
 #' @rdname running_jobs
+#'
 #' @export
 queue_job <- function(app,
                       answers,
@@ -300,8 +297,23 @@ queue_job <- function(app,
 }
 
 #' @rdname running_jobs
+#'
 #' @export
 build_answers <- function(name_value, ...) {
   questions <- list(name_value, ...)
   jsonlite::toJSON(list(questions = questions), auto_unbox = TRUE)
+}
+
+#' Get Resource Information
+#'
+#' Retrieves all metadata about an Alteryx resource including but not limited
+#' to upload date, version, and author
+#'
+#' @param resource An Alteryx \code{app} or \code{job}
+#' @export
+get_info <- function(resource) {
+  info <- lapply(names(resource), function(x) {resource[[x]]})
+  names(info) <- names(resource)
+
+  return(info)
 }
