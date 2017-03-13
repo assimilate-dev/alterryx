@@ -13,7 +13,7 @@ queue_job(app, answers, gallery = getOption("alteryx_gallery"))
 build_answers(name_value, ...)
 }
 \arguments{
-\item{app}{An \code{alteryx_app} returned from \code{\link{get_app}}}
+\item{app}{A single \code{alteryx_app} returned from \code{get_app}}
 
 \item{answers}{Answers to required \code{app} questions created using
 \code{build_answers}}
@@ -31,16 +31,16 @@ An alteryx job with status "Queued"
 Each app has a set of questions that require an answer in order
 to be run. The answers to the app questions are formatted using
 \code{build_answers}. To see the required questions for an app use
-\code{\link{get_app_questions}}.
+\code{get_app_questions}.
 
-Use \code{\link{queue_job}} to queue a job for an app. A job is a single run
+Use \code{queue_job} to queue a job for an app. A job is a single run
 of an app run according to the answers submitted.
 }
 \section{See Also}{
 
-Use \code{\link{get_app}} to find apps to queue.
+Use \code{get_app} to find apps to queue.
 
-Once a job has been queued, use \code{\link{get_job}} to poll the job and
+Once a job has been queued, use \code{get_job} to poll the job and
 check its status.
 }
 

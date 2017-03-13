@@ -14,11 +14,12 @@ get_app_jobs(app, request_params = list(),
 get_job(job, gallery = getOption("alteryx_gallery"))
 }
 \arguments{
-\item{app}{An Alteryx app returned from \code{\link{get_app}}}
+\item{app}{A single \code{alteryx_app} returned from \code{get_app}}
 
-\item{request_params}{List of request parameters. For more information on
+\item{request_params}{List of app search parameters. For more information on
 parameters, visit the Alteryx Gallery API documentation
-\url{https://gallery.alteryx.com/api-docs/}}
+\url{https://gallery.alteryx.com/api-docs/} and see the parameters under the
+'Find workflows in a subscription' section.}
 
 \item{gallery}{URL for your Alteryx Gallery}
 
@@ -36,7 +37,7 @@ status of a job.
 }
 \section{See Also}{
 
-Once a job is complete, use \code{\link{get_job_output}} to retrieve
+Once a job is complete, use \code{get_job_output} to retrieve
 the results.
 }
 
@@ -49,6 +50,14 @@ request_params <- list(
 )
 
 get_app_jobs(app, request_params)
+
+# queue a job and poll the job's status until it is "Completed"
+job <- queue_job(app, answers)
+
+while(job$status != "Completed") {
+job <- get_job(job)
+Sys.sleep(2)
+}
 }
 
 }

@@ -7,7 +7,7 @@
 get_app_questions(app, gallery = getOption("alteryx_gallery"))
 }
 \arguments{
-\item{app}{An \code{alteryx_app} returned from \code{\link{get_app}}}
+\item{app}{A single \code{alteryx_app} returned from \code{get_app}}
 
 \item{gallery}{URL for your Alteryx Gallery}
 }
@@ -18,7 +18,7 @@ workflows can be used.
 \details{
 Most Alteryx apps have questions, user input that defines how
 the application should run. The answers to these questions need to be sent
-as \code{request_body} when queueing an application on Gallery with
+as \code{answers} when queueing an application on Gallery with
 \code{queue_job}. \code{get_app_questions} returns the names,
 types, and default values of the questions for an app.
 }

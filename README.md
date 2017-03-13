@@ -42,6 +42,8 @@ extension *.yxwz* that are published to your Gallery.
 
 The resources you can access are obtained using `get_app`.
 
+### Search Apps
+
     subscription <- get_app()
 
 You now have a `list` containing all of the resources you can access. If
@@ -62,9 +64,9 @@ can use the `limit` and `sortField` parameters.
 
 There is a reason to differentiate between 'resources' and 'apps'.
 `get_app` will return all resources that you can access via your
-subscription. However, only 'apps' can be used with the rest of the API
-functions. To make sure that `get_app` only returns apps, use
-`packageType = "0"` as a request parameter.
+subscription that match the search parameters. However, only 'apps' can
+be used with the rest of the API functions. To make sure that `get_app`
+only returns apps, use `packageType = "0"` as a request parameter.
 
     request_params <- list(
       packageType = "0",
@@ -90,6 +92,13 @@ search for it by name. Lets say we are looking for an application named
 
 In this case, the app I was looking for was the first result in the
 list.
+
+### Download a Specific App
+
+If you would like to work with the application in Alteryx, you can use
+`doanload_app` to download the application as a *.yxzp* file.
+
+    download_app(app)
 
 Queueing a Job
 --------------

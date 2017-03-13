@@ -7,19 +7,24 @@
 get_app(request_params = list(), gallery = getOption("alteryx_gallery"))
 }
 \arguments{
-\item{request_params}{List of request parameters. For more information on
+\item{request_params}{List of app search parameters. For more information on
 parameters, visit the Alteryx Gallery API documentation
-\url{https://gallery.alteryx.com/api-docs/}}
+\url{https://gallery.alteryx.com/api-docs/} and see the parameters under the
+'Find workflows in a subscription' section.}
 
 \item{gallery}{URL for your Alteryx Gallery}
 }
 \value{
-A \code{list} of \code{alteryx_app}s
+\code{get_app} returns a \code{list} of \code{alteryx_app}s
 }
 \description{
-Get the workflows you can access from your studio (subscription).
-Subscription is tied to API key. You cannot request workflows for any other
-subscription without that subscription's API keys.
+An Alteryx application is a workflow that has been designed to
+run based on user input to questions. In order to run these resources using
+\code{alterryx} you must first obtain the application that you want to run.
+
+To search the workflows you can access from your studio (subscription), use
+\code{get_app}. Subscription is tied to API key. You cannot request
+workflows for any other subscription without that subscription's API keys.
 }
 \section{WARNING}{
 

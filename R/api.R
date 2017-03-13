@@ -1,10 +1,14 @@
 #' Get Applications
 #'
-#' Get the workflows you can access from your studio (subscription).
-#' Subscription is tied to API key. You cannot request workflows for any other
-#' subscription without that subscription's API keys.
+#' @description An Alteryx application is a workflow that has been designed to
+#' run based on user input to questions. In order to run these resources using
+#' \code{alterryx} you must first obtain the application that you want to run.
 #'
-#' @return A \code{list} of \code{alteryx_app}s
+#' To search the workflows you can access from your studio (subscription), use
+#' \code{get_app}. Subscription is tied to API key. You cannot request
+#' workflows for any other subscription without that subscription's API keys.
+#'
+#' @return \code{get_app} returns a \code{list} of \code{alteryx_app}s
 #'
 #' @section WARNING:
 #' \code{get_app} will return all resources in the Gallery tied to your
@@ -13,9 +17,10 @@
 #' to do so you will receive an error.
 #'
 #' @param gallery URL for your Alteryx Gallery
-#' @param request_params List of request parameters. For more information on
+#' @param request_params List of app search parameters. For more information on
 #' parameters, visit the Alteryx Gallery API documentation
-#' \url{https://gallery.alteryx.com/api-docs/}
+#' \url{https://gallery.alteryx.com/api-docs/} and see the parameters under the
+#' 'Find workflows in a subscription' section.
 #'
 #' @examples
 #' \dontrun{
@@ -48,6 +53,44 @@ get_app <- function(request_params = list(),
   return(content)
 }
 
+#' Download App
+#'
+#' Download an app as a .yxzp file
+#'
+#' @inheritParams get_app_questions
+#' @param destfile A character string with the directory and name of where the
+#' downloaded file is to be saved.
+#'
+#' @export
+download_app <- function(app,
+                         destfile,
+                         gallery = getOption("alteryx_gallery")) {
+  if(!is.alteryx_app(app))
+    stop("argument 'app' must be an object of class 'alteryx_app")
+
+  endpoint <- "/api/v1/{appId}/package/"
+  app_id <- app$id
+  endpoint <- gsub("\\{appId\\}", app_id, endpoint)
+
+  request_params <- list()
+
+  content <- submit_get_request(gallery,
+                                endpoint,
+                                request_params,
+                                as = "raw",
+                                remove_bom = FALSE,
+                                parse_JSON = FALSE)
+
+  if(missing(destfile)) {
+    app_name <- app$metaInfo$name
+    destfile <- paste0(app_name, ".yxzp")
+  }
+
+  writeBin(content, destfile)
+
+  return(destfile)
+}
+
 #' Get App Questions
 #'
 #' @description Get the questions for the given Alteryx Analtytic App. Only app
@@ -55,7 +98,7 @@ get_app <- function(request_params = list(),
 #'
 #' @details Most Alteryx apps have questions, user input that defines how
 #' the application should run. The answers to these questions need to be sent
-#' as \code{request_body} when queueing an application on Gallery with
+#' as \code{answers} when queueing an application on Gallery with
 #' \code{queue_job}. \code{get_app_questions} returns the names,
 #' types, and default values of the questions for an app.
 #'
@@ -64,7 +107,7 @@ get_app <- function(request_params = list(),
 #' limitation of Alteryx Gallery and not this API client.
 #'
 #' @inheritParams get_app
-#' @param app An \code{alteryx_app} returned from \code{\link{get_app}}
+#' @param app A single \code{alteryx_app} returned from \code{get_app}
 #'
 #' @export
 get_app_questions <- function(app,
@@ -95,11 +138,11 @@ get_app_questions <- function(app,
 #' status of a job.
 #'
 #' @section See Also:
-#' Once a job is complete, use \code{\link{get_job_output}} to retrieve
+#' Once a job is complete, use \code{get_job_output} to retrieve
 #' the results.
 #'
 #' @inheritParams get_app
-#' @param app An Alteryx app returned from \code{\link{get_app}}
+#' @param app A single \code{alteryx_app} returned from \code{get_app}
 #' @param job An Alteryx job returned from \code{get_app_jobs} or
 #' \code{queue_jobs}
 #'
@@ -114,6 +157,14 @@ get_app_questions <- function(app,
 #' )
 #'
 #' get_app_jobs(app, request_params)
+#'
+#' # queue a job and poll the job's status until it is "Completed"
+#' job <- queue_job(app, answers)
+#'
+#' while(job$status != "Completed") {
+#' job <- get_job(job)
+#' Sys.sleep(2)
+#' }
 #' }
 #'
 #' @name app_jobs
@@ -190,6 +241,9 @@ get_job <- function(job,
 get_job_output <- function(job,
                            gallery = getOption("alteryx_gallery"),
                            quiet = FALSE) {
+  if(!is.alteryx_job(job))
+    stop("argument 'job' must be an object of class 'alteryx_job")
+
   if(job$status != "Completed")
     stop("Job not complete. Cannot get output.")
   if(!length(job$outputs))
@@ -238,21 +292,21 @@ get_job_output <- function(job,
 #' @description Each app has a set of questions that require an answer in order
 #' to be run. The answers to the app questions are formatted using
 #' \code{build_answers}. To see the required questions for an app use
-#' \code{\link{get_app_questions}}.
+#' \code{get_app_questions}.
 #'
-#' Use \code{\link{queue_job}} to queue a job for an app. A job is a single run
+#' Use \code{queue_job} to queue a job for an app. A job is a single run
 #' of an app run according to the answers submitted.
 #'
 #' @section See Also:
-#' Use \code{\link{get_app}} to find apps to queue.
+#' Use \code{get_app} to find apps to queue.
 #'
-#' Once a job has been queued, use \code{\link{get_job}} to poll the job and
+#' Once a job has been queued, use \code{get_job} to poll the job and
 #' check its status.
 #'
 #' @return An alteryx job with status "Queued"
 #'
 #' @inheritParams get_app
-#' @param app An \code{alteryx_app} returned from \code{\link{get_app}}
+#' @param app A single \code{alteryx_app} returned from \code{get_app}
 #' @param answers Answers to required \code{app} questions created using
 #' \code{build_answers}
 #' @param name_value \code{list} containing an app question name and value pair
@@ -302,18 +356,4 @@ queue_job <- function(app,
 build_answers <- function(name_value, ...) {
   questions <- list(name_value, ...)
   jsonlite::toJSON(list(questions = questions), auto_unbox = TRUE)
-}
-
-#' Get Resource Information
-#'
-#' Retrieves all metadata about an Alteryx resource including but not limited
-#' to upload date, version, and author
-#'
-#' @param resource An Alteryx \code{app} or \code{job}
-#' @export
-get_info <- function(resource) {
-  info <- lapply(names(resource), function(x) {resource[[x]]})
-  names(info) <- names(resource)
-
-  return(info)
 }
