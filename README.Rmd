@@ -1,7 +1,7 @@
 ---
 title: "README"
 author: "Michael Treadwell"
-date: "March 9, 2017"
+date: "March 13, 2017"
 output: md_document
 ---
 
@@ -19,7 +19,6 @@ In order to use this package, you will need to have [a private gallery
 API key and secret](https://community.alteryx.com/t5/Alteryx-Knowledge-Base/Private-Gallery-API-Key-and-Secret/ta-p/22009)
 
 ## Setup
-
 ```{r installation, eval = FALSE}
 devtools::install_github("mtreadwell/alterryx")
 ```
@@ -49,6 +48,7 @@ to your Gallery.
 
 The resources you can access are obtained using `get_app`.
 
+### Search Apps
 ```{r get_all_resources, eval = FALSE}
 subscription <- get_app()
 ```
@@ -71,9 +71,10 @@ subscription <- get_app(request_params)
 
 ### Non-applications
 There is a reason to differentiate between 'resources' and 'apps'. `get_app`
-will return all resources that you can access via your subscription. However,
-only 'apps' can be used with the rest of the API functions. To make sure that
-`get_app` only returns apps, use `packageType = "0"` as a request parameter.
+will return all resources that you can access via your subscription that match
+the search parameters. However, only 'apps' can be used with the rest of the
+API functions. To make sure that `get_app` only returns apps, use
+`packageType = "0"` as a request parameter.
 
 ```{r get_some_apps, eval = FALSE}
 request_params <- list(
@@ -100,6 +101,13 @@ app <- subscriptions[[1]]
 ```
 
 In this case, the app I was looking for was the first result in the list.
+
+### Download a Specific App
+If you would like to work with the application in Alteryx, you can use
+`doanload_app` to download the application as a _.yxzp_ file.
+```{r get_specific_app, eval = FALSE}
+download_app(app)
+```
 
 ## Queueing a Job
 Now that I have the app I want, I want to queue a job for it. A 'job' is one
@@ -188,3 +196,4 @@ warning by default and skip the 'invalid' outputs.
 
 In order to be properly converted, your output must be written in _csv_ or
 _yxdb_ format from the Alteryx app published to Gallery.
+
