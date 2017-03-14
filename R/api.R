@@ -65,8 +65,7 @@ get_app <- function(request_params = list(),
 download_app <- function(app,
                          destfile,
                          gallery = getOption("alteryx_gallery")) {
-  if(!is.alteryx_app(app))
-    stop("argument 'app' must be an object of class 'alteryx_app")
+  class_check <- check_class(app, "app")
 
   endpoint <- "/api/v1/{appId}/package/"
   app_id <- app$id
@@ -112,8 +111,7 @@ download_app <- function(app,
 #' @export
 get_app_questions <- function(app,
                               gallery = getOption("alteryx_gallery")) {
-  if(!is.alteryx_app(app))
-    stop("argument 'app' must be an object of class 'alteryx_app")
+  class_check <- check_class(app, "app")
 
   request_params <- list()
   endpoint <- "/api/v1/workflows/{appId}/questions/"
@@ -176,8 +174,7 @@ NULL
 get_app_jobs <- function(app,
                          request_params = list(),
                          gallery = getOption("alteryx_gallery")) {
-  if(!is.alteryx_app(app))
-    stop("argument 'app' must be an object of class 'alteryx_app")
+  class_check <- check_class(app, "app")
 
   endpoint <- "/api/v1/workflows/{appId}/jobs/"
   app_id <- app$id
@@ -187,6 +184,8 @@ get_app_jobs <- function(app,
                                 endpoint,
                                 request_params)
 
+  #TODO: convert content list to alteryx_jobs
+
   return(content)
 }
 
@@ -195,8 +194,7 @@ get_app_jobs <- function(app,
 #' @export
 get_job <- function(job,
                     gallery = getOption("alteryx_gallery")) {
-  if(!is.alteryx_job(job))
-    stop("argument 'job' must be an object of class 'alteryx_job")
+  class_check <- check_class(job, "job")
 
   request_params <- list()
   endpoint <- "/api/v1/jobs/{jobId}/"
@@ -241,14 +239,14 @@ get_job <- function(job,
 get_job_output <- function(job,
                            gallery = getOption("alteryx_gallery"),
                            quiet = FALSE) {
-  if(!is.alteryx_job(job))
-    stop("argument 'job' must be an object of class 'alteryx_job")
+  class_check <- check_class(job, "job")
 
   if(job$status != "Completed")
     stop("Job not complete. Cannot get output.")
   if(!length(job$outputs))
     stop("Job has no output.")
 
+  #test that all outputs have format "Csv"
   outputs <- job$outputs
   valid_outputs <- lapply(outputs, function(x) {
     "Csv" %in% unlist(x$formats)
@@ -256,8 +254,8 @@ get_job_output <- function(job,
   valid_outputs <- outputs[unlist(valid_outputs)]
 
   if(length(outputs) != length(valid_outputs) && !quiet)
-    warning("All outputs not valid to read as a data.frame and will be skipped.
-            See ??get_job_output for more information.")
+    warning("All outputs not valid to read as a data.frame and will be ",
+            "skipped. See ??get_job_output for more information.")
 
   endpoint <- "/api/v1/jobs/{jobId}/output/{outputId}/"
   job_id <- job$id
@@ -332,8 +330,7 @@ NULL
 queue_job <- function(app,
                       answers,
                       gallery = getOption("alteryx_gallery")) {
-  if(!is.alteryx_app(app))
-    stop("argument 'app' must be an object of class 'alteryx_app")
+  class_check <- check_class(app, "app")
 
   request_params <- list()
   app_id <- app$id
