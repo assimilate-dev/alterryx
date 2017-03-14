@@ -47,7 +47,7 @@ get_app <- function(request_params = list(),
   if(length(content)) {
     content <- lapply(content, as.alteryx_app)
   } else {
-    content <- NULL
+    content <- list()
   }
 
   return(content)
@@ -184,9 +184,25 @@ get_app_jobs <- function(app,
                                 endpoint,
                                 request_params)
 
-  #TODO: convert content list to alteryx_jobs
+  job_ids <- lapply(content, function(x) {x$id})
+  get_job_by_id <- function(job_id,
+                            app,
+                            gallery = getOption("alteryx_gallery")) {
+    request_params <- list()
+    endpoint <- "/api/v1/jobs/{jobId}/"
+    endpoint <- gsub("\\{jobId\\}", job_id, endpoint)
 
-  return(content)
+    content <- submit_get_request(gallery,
+                                  endpoint,
+                                  request_params)
+
+    content <- as.alteryx_job(content, app)
+
+    return(content)
+  }
+  jobs <- lapply(job_ids, function(x) {get_job_by_id(x, app)})
+
+  return(jobs)
 }
 
 #' @rdname app_jobs
