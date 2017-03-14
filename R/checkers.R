@@ -1,5 +1,6 @@
 #' Error handling for incorrect object inputs to api.R calls
 #'
+#' @param object An R object
 #' @param type Expected \code{class} of \code{object}
 check_class <- function(object, type) {
   error_message <-

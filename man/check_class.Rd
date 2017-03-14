@@ -7,7 +7,9 @@
 check_class(object, type)
 }
 \arguments{
+\item{object}{An R object}
 
+\item{type}{Expected \code{class} of \code{object}}
 }
 \description{
 Error handling for incorrect object inputs to api.R calls
