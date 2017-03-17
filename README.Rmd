@@ -19,9 +19,6 @@ In order to use this package, you will need to have [a private gallery
 API key and secret](https://community.alteryx.com/t5/Alteryx-Knowledge-Base/Private-Gallery-API-Key-and-Secret/ta-p/22009)
 
 ## Setup
-```{r installation, eval = FALSE}
-devtools::install_github("mtreadwell/alterryx")
-```
 
 Once you have obtained your API key and secret set them as global options.
 Though it is not necessary, it will save you typing later if you also set your

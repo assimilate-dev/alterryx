@@ -15,8 +15,6 @@ secret](https://community.alteryx.com/t5/Alteryx-Knowledge-Base/Private-Gallery-
 Setup
 -----
 
-    devtools::install_github("mtreadwell/alterryx")
-
 Once you have obtained your API key and secret set them as global
 options. Though it is not necessary, it will save you typing later if
 you also set your Alteryx Gallery URL as an option.
