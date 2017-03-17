@@ -1,3 +1,6 @@
+[![Travis-CI Build
+Status](https://travis-ci.org/mtreadwell/alterryx.svg?branch=master)](https://travis-ci.org/mtreadwell/alterryx)
+
 `alterryx` provides access to each of the Alteryx Gallery API endpoints.
 With `alterryx` users can:
 
