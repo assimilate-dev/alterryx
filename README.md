@@ -185,3 +185,9 @@ warning by default and skip the 'invalid' outputs.
 
 In order to be properly converted, your output must be written in *csv*
 or *yxdb* format from the Alteryx app published to Gallery.
+
+To Do
+-----
+
+-   Add support for handling "Completed" jobs that have failed
+-   Add function to poll job until complete

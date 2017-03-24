@@ -1,11 +1,18 @@
 Package: alterryx
 Type: Package
-Title: An API Client for the Alteryx Gallery
+Title: An 'API' Client for the 'Alteryx' Gallery
 Version: 0.2.0
 Author: Michael Treadwell
 Maintainer: Michael Treadwell <michael.treadwell@interworks.com>
-Description: alterryx provides functions to access each of the alteryx gallery
-    api endpoints.
+Description: A tool to access each of the 'Alteryx' Gallery 'API' endpoints.
+    Users can queue jobs, poll job status, and retrieve application output as
+    a data frame. You will need an 'Alteryx' Server license and have 'Alteryx'
+    Gallery running to utilize this package. The 'API' is accessed through the
+    'URL' that you setup for the server running 'Alteryx' Gallery and more
+    information on the endpoints can be found at
+    <https://gallery.alteryx.com/api-docs/>.
+URL: https://github.com/mtreadwell/alterryx,
+    https://gallery.alteryx.com/api-docs/
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
