@@ -56,7 +56,13 @@ is.alteryx_job <- function(object) inherits(object, "alteryx_job")
 
 #' @export
 format.alteryx_job <- function(x, ...) {
-  paste0("job for ", x$parentApp, ", job_id:", x$id, ", status:", x$status)
+  paste(
+    paste("Alteryx job for app", x$parentApp),
+    paste("Job ID:", x$id),
+    paste("Status:", x$status),
+    paste("Disposition:", x$disposition),
+    sep = "\n"
+  )
 }
 
 #' @export

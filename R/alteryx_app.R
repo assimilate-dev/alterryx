@@ -44,6 +44,11 @@ is.alteryx_app <- function(object) inherits(object, "alteryx_app")
 #' @export
 format.alteryx_app <- function(x, ...) {
   paste0(x$fileName, ", id:", x$id)
+  paste(
+    paste("App Name:", x$fileName),
+    paste("App ID:", x$id),
+    collapse = "\n"
+  )
 }
 
 #' @export
