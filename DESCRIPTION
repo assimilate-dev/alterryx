@@ -21,7 +21,7 @@ Imports:
     utils,
     digest,
     base64enc,
-    jsonlite
+    jsonlite (>= 1.4)
 RoxygenNote: 6.0.1
 Suggests: knitr,
     rmarkdown
