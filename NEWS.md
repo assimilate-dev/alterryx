@@ -13,10 +13,3 @@ Added the binary parameter `full_info` to print all info from the API.
 
 * `queue_job` can now "track" a job. If `track_job = TRUE`, the function will
 not return a value until the job has finished running on the Alteryx Gallery
-
-# alterryx 0.2.0.9000
-
-* Added a `NEWS.md` file to track changes to the package.
-
-
-
