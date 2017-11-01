@@ -30,7 +30,7 @@ get_job_log <- function(job) {
   if(!length(job$messages))
     stop("Job has no log.")
 
-  messages <- lapply(get_info(job)$messages, function(x) {
+  messages <- lapply(job$messages, function(x) {
     data.frame(x, stringsAsFactors = FALSE)[c("toolId", "text")]
   })
   messages <- do.call(rbind, messages)
