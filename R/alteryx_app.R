@@ -43,13 +43,34 @@ is.alteryx_app <- function(object) inherits(object, "alteryx_app")
 
 #' @export
 format.alteryx_app <- function(x, ...) {
-  paste0(x$fileName, ", id:", x$id)
   paste(
     paste("App Name:", x$fileName),
     paste("App ID:", x$id),
-    collapse = "\n"
+    sep = "\n"
   )
 }
 
 #' @export
 print.alteryx_app <- function(x, ...) cat(format(x, ...), "\n")
+
+#' @export
+get_info.alteryx_app <- function(resource, full_info = FALSE) {
+
+  if(full_info) {
+
+    info <- lapply(names(resource), function(x) {resource[[x]]})
+    names(info) <- names(resource)
+
+  } else {
+
+    info_names <- names(resource)
+    info_names <- info_names[!info_names %in% c("metaInfo")]
+
+    info <- lapply(info_names, function(x) {resource[[x]]})
+    names(info) <- info_names
+
+  }
+
+  return(info)
+
+}

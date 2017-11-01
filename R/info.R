@@ -4,6 +4,9 @@
 #' to upload date, version, and author
 #'
 #' @param resource An Alteryx \code{app} or \code{job}
+#' @param full_info If \code{TRUE}, returns all info retrieved from Gallery.
+#' The default, \code{FALSE}, removes extraneous information to make it
+#' easier to read.
 #'
 #' @examples
 #' \dontrun{
@@ -12,12 +15,7 @@
 #' }
 #'
 #' @export
-get_info <- function(resource) {
-  info <- lapply(names(resource), function(x) {resource[[x]]})
-  names(info) <- names(resource)
-
-  return(info)
-}
+get_info <- function(resource, full_info = FALSE) UseMethod("get_info")
 
 #' Job Log
 #'

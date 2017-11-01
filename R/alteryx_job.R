@@ -67,3 +67,31 @@ format.alteryx_job <- function(x, ...) {
 
 #' @export
 print.alteryx_job <- function(x, ...) cat(format(x, ...), "\n")
+
+#' @export
+get_info.alteryx_job <- function(resource, full_info = FALSE) {
+
+  if(full_info) {
+
+    info <- lapply(names(resource), function(x) {resource[[x]]})
+    names(info) <- names(resource)
+
+  } else {
+
+    info_names <- names(resource)
+    info_names <- info_names[!info_names %in% c("outputs", "messages")]
+
+    info <- lapply(info_names, function(x) {resource[[x]]})
+    names(info) <- info_names
+
+    if(length(resource$outputs)) {
+      output_names <- lapply(resource$outputs, function(x) {x$name})
+      outputs <- lapply(resource$outputs, function(x) {x$id})
+      names(outputs) <- unlist(output_names)
+      info <- append(info, list(outputs = outputs))
+    }
+
+  }
+
+  return(info)
+}

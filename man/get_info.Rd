@@ -4,10 +4,14 @@
 \alias{get_info}
 \title{Get Resource Information}
 \usage{
-get_info(resource)
+get_info(resource, full_info = FALSE)
 }
 \arguments{
 \item{resource}{An Alteryx \code{app} or \code{job}}
+
+\item{full_info}{If \code{TRUE}, returns all info retrieved from Gallery.
+The default, \code{FALSE}, removes extraneous information to make it
+easier to read.}
 }
 \description{
 Retrieves all metadata about an Alteryx resource including but not limited
