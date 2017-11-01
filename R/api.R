@@ -323,6 +323,12 @@ get_job_output <- function(job,
 #' @param app A single \code{alteryx_app} returned from \code{get_app}
 #' @param answers Answers to required \code{app} questions created using
 #' \code{build_answers}
+#' @param track_job If \code{TRUE} this function will not return a value until
+#' the job completes on Alteryx Gallery
+#' @param sleep Amount of time to wait between job polls. Ignored if
+#' \code{track_job = FALSE}
+#' @param timeout Maximum amount of time to track job. Ignored if
+#' \code{track_job = FALSE}
 #' @param name_value \code{list} containing an app question name and value pair
 #' @param ... Additional \code{name_value} pairs
 #'
@@ -345,6 +351,9 @@ NULL
 #' @export
 queue_job <- function(app,
                       answers,
+                      track_job = FALSE,
+                      sleep = 10,
+                      timeout = 3600,
                       gallery = getOption("alteryx_gallery")) {
   class_check <- check_class(app, "app")
 
@@ -359,6 +368,29 @@ queue_job <- function(app,
                                  request_body = answers)
 
   content <- as.alteryx_job(content, app)
+
+  if(track_job) {
+
+    time_count <- 0
+
+    while(content$status != "Completed" & time_count < timeout) {
+
+      content <- get_job(content,
+                         gallery = gallery)
+
+      Sys.sleep(sleep)
+
+      time_count <- time_count + sleep
+
+    }
+
+    if(time_count >= timeout) {
+      stop("Timeout limit reached and job not completed.
+           Job may still be running on the Alteryx Server and will need to be
+           stopped manually.")
+    }
+
+  }
 
   return(content)
 }
