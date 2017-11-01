@@ -8,7 +8,8 @@
 \alias{build_answers}
 \title{Queue Job for an App}
 \usage{
-queue_job(app, answers, gallery = getOption("alteryx_gallery"))
+queue_job(app, answers, track_job = FALSE, sleep = 10, timeout = 3600,
+  gallery = getOption("alteryx_gallery"))
 
 build_answers(name_value, ...)
 }
@@ -17,6 +18,15 @@ build_answers(name_value, ...)
 
 \item{answers}{Answers to required \code{app} questions created using
 \code{build_answers}}
+
+\item{track_job}{If \code{TRUE} this function will not return a value until
+the job completes on Alteryx Gallery}
+
+\item{sleep}{Amount of time to wait between job polls. Ignored if
+\code{track_job = FALSE}}
+
+\item{timeout}{Maximum amount of time to track job. Ignored if
+\code{track_job = FALSE}}
 
 \item{gallery}{URL for your Alteryx Gallery}
 
