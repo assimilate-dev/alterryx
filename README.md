@@ -77,10 +77,6 @@ only returns apps, use `packageType = "0"` as a request parameter.
 
     subscription <- get_app(request_params)
 
-*KNOWN ISSUE WITH SEARCH PARAMETER* Using the `search` parameter for the
-`get_app` function is currently not not working. This is an issue with
-the Alteryx Gallery API and not this package.
-
 ### Search Apps by Name
 
 If you are looking for a specific app, it might be easiest to simply

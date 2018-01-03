@@ -1,3 +1,8 @@
+# alterryx 0.3.1
+
+* API functions will no longer produce an invalid signature message when using
+special characters (such as spaces) in parameter string
+
 # alterryx 0.3.0
 
 * Updated version dependency for jsonlite as older versions of the package do

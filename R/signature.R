@@ -2,9 +2,11 @@
 #'
 #' @param l A \code{list}
 #' @param reserved logical: should ‘reserved’ characters be encoded?
-encode_list <- function(l, reserved = TRUE) {
+#' @param repeated logical: should apparently already-encoded URLs be encoded
+#' again?
+encode_list <- function(l, reserved = TRUE, repeated = TRUE) {
   lapply(l, function(x) {
-    utils::URLencode(x, reserved = reserved)
+    utils::URLencode(x, reserved = reserved, repeated = repeated)
   })
 }
 
@@ -33,7 +35,6 @@ generate_required_headers <- function() {
 #' @inheritParams build_signature
 build_base_url <- function(gallery, endpoint) {
   base_url <- paste0(gallery, endpoint)
-  base_url <- utils::URLencode(base_url, reserved = TRUE)
 
   return(base_url)
 }
@@ -45,7 +46,6 @@ build_base_url <- function(gallery, endpoint) {
 normalize_request_params <- function(required_headers,
                                      request_params) {
   request_params <- append(required_headers, request_params)
-  request_params <- encode_list(request_params)
   request_params <- request_params[sort(names(request_params))]
   request_params <-
     paste0(names(request_params), "=", request_params, collapse = "&")
@@ -98,6 +98,10 @@ build_signature <- function(gallery,
                             required_headers,
                             request_params) {
   base_url <- build_base_url(gallery, endpoint)
+
+  required_headers <- encode_list(required_headers)
+  request_params <- encode_list(request_params)
+
   normalized_request_params <-
     normalize_request_params(required_headers,
                              request_params)

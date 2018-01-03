@@ -16,6 +16,7 @@ build_request_url <- function(gallery,
                                      required_headers,
                                      request_params)
   params <- append(required_headers, request_params)
+  params <- encode_list(params)
   params <- append(params, list(oauth_signature = oauth_signature))
   params <- params[sort(names(params))]
   params <- paste0(names(params), "=", params, collapse = "&")
