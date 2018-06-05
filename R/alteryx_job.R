@@ -27,7 +27,8 @@ as.alteryx_job <- function(x, parent) {
 
   x <- add_parent(x, parent)
 
-  expected <- list(parentApp = "character",
+  expected <- list(appId = "NULL",
+                   parentApp = "character",
                    parentId = "character",
                    id = "character",
                    createDate = "character",

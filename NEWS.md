@@ -3,6 +3,8 @@
 * API functions will no longer produce an invalid signature message when using
 special characters (such as spaces) in parameter string
 
+* Updated client to reflect changes in Alteryx Gallery API with 2018.1 release
+
 # alterryx 0.3.0
 
 * Updated version dependency for jsonlite as older versions of the package do
