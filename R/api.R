@@ -355,6 +355,7 @@ queue_job <- function(app,
                       sleep = 10,
                       timeout = 3600,
                       gallery = getOption("alteryx_gallery")) {
+  
   class_check <- check_class(app, "app")
 
   request_params <- list()
