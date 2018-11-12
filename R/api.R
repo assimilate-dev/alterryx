@@ -220,6 +220,7 @@ get_job <- function(job,
   content <- submit_get_request(gallery,
                                 endpoint,
                                 request_params)
+  content$workerTag<-ifelse(is.null(content$workerTag),"",content$workerTag)
 
   content <- as.alteryx_job(content, job)
 
@@ -355,7 +356,7 @@ queue_job <- function(app,
                       sleep = 10,
                       timeout = 3600,
                       gallery = getOption("alteryx_gallery")) {
-  
+
   class_check <- check_class(app, "app")
 
   request_params <- list()
