@@ -35,7 +35,9 @@ as.alteryx_job <- function(x, parent) {
                    status = "character",
                    disposition = "character",
                    outputs = "list",
-                   messages = "list")
+                   messages = "list",
+                   priority = "integer",
+                   workerTag = "character")
 
   expected <- expected[sort(names(expected))]
   x <- x[sort(names(x))]
