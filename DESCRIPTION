@@ -1,7 +1,7 @@
 Package: alterryx
 Type: Package
 Title: An 'API' Client for the 'Alteryx' Gallery
-Version: 0.3.2.9000
+Version: 0.4.0.9000
 Author: Michael Treadwell
 Maintainer: Michael Treadwell <michael.treadwell@interworks.com>
 Description: A tool to access each of the 'Alteryx' Gallery 'API' endpoints.
