@@ -9,7 +9,7 @@
 \title{Queue Job for an App}
 \usage{
 queue_job(app, answers, track_job = FALSE, sleep = 10, timeout = 3600,
-  gallery = getOption("alteryx_gallery"))
+  gallery = get_gallery())
 
 build_answers(name_value, ...)
 }

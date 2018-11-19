@@ -4,7 +4,7 @@
 \alias{get_app_questions}
 \title{Get App Questions}
 \usage{
-get_app_questions(app, gallery = getOption("alteryx_gallery"))
+get_app_questions(app, gallery = get_gallery())
 }
 \arguments{
 \item{app}{A single \code{alteryx_app} returned from \code{get_app}}

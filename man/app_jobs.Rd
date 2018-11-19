@@ -8,10 +8,9 @@
 \alias{get_job}
 \title{Get App Jobs}
 \usage{
-get_app_jobs(app, request_params = list(),
-  gallery = getOption("alteryx_gallery"))
+get_app_jobs(app, request_params = list(), gallery = get_gallery())
 
-get_job(job, gallery = getOption("alteryx_gallery"))
+get_job(job, gallery = get_gallery())
 }
 \arguments{
 \item{app}{A single \code{alteryx_app} returned from \code{get_app}}

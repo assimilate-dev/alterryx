@@ -4,7 +4,7 @@
 \alias{get_job_output}
 \title{Get Job Output}
 \usage{
-get_job_output(job, gallery = getOption("alteryx_gallery"), quiet = FALSE)
+get_job_output(job, gallery = get_gallery(), quiet = FALSE)
 }
 \arguments{
 \item{job}{An completed Alteryx job returned from \code{get_app_jobs}}

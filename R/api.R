@@ -37,7 +37,7 @@
 #'
 #' @export
 get_app <- function(request_params = list(),
-                    gallery = getOption("alteryx_gallery")) {
+                    gallery = get_gallery()) {
   endpoint <- "/api/v1/workflows/subscription/"
 
   content <- submit_get_request(gallery,
@@ -64,7 +64,7 @@ get_app <- function(request_params = list(),
 #' @export
 download_app <- function(app,
                          destfile,
-                         gallery = getOption("alteryx_gallery")) {
+                         gallery = get_gallery()) {
   class_check <- check_class(app, "app")
 
   endpoint <- "/api/v1/{appId}/package/"
@@ -110,7 +110,7 @@ download_app <- function(app,
 #'
 #' @export
 get_app_questions <- function(app,
-                              gallery = getOption("alteryx_gallery")) {
+                              gallery = get_gallery()) {
   class_check <- check_class(app, "app")
 
   request_params <- list()
@@ -173,7 +173,7 @@ NULL
 #' @export
 get_app_jobs <- function(app,
                          request_params = list(),
-                         gallery = getOption("alteryx_gallery")) {
+                         gallery = get_gallery()) {
   class_check <- check_class(app, "app")
 
   endpoint <- "/api/v1/workflows/{appId}/jobs/"
@@ -187,7 +187,7 @@ get_app_jobs <- function(app,
   job_ids <- lapply(content, function(x) {x$id})
   get_job_by_id <- function(job_id,
                             app,
-                            gallery = getOption("alteryx_gallery")) {
+                            gallery = get_gallery()) {
     request_params <- list()
     endpoint <- "/api/v1/jobs/{jobId}/"
     endpoint <- gsub("\\{jobId\\}", job_id, endpoint)
@@ -209,7 +209,7 @@ get_app_jobs <- function(app,
 #'
 #' @export
 get_job <- function(job,
-                    gallery = getOption("alteryx_gallery")) {
+                    gallery = get_gallery()) {
   class_check <- check_class(job, "job")
 
   request_params <- list()
@@ -254,7 +254,7 @@ get_job <- function(job,
 #'
 #' @export
 get_job_output <- function(job,
-                           gallery = getOption("alteryx_gallery"),
+                           gallery = get_gallery(),
                            quiet = FALSE) {
   class_check <- check_class(job, "job")
 
@@ -355,7 +355,7 @@ queue_job <- function(app,
                       track_job = FALSE,
                       sleep = 10,
                       timeout = 3600,
-                      gallery = getOption("alteryx_gallery")) {
+                      gallery = get_gallery()) {
 
   class_check <- check_class(app, "app")
 

@@ -4,7 +4,7 @@
 \alias{get_app}
 \title{Get Applications}
 \usage{
-get_app(request_params = list(), gallery = getOption("alteryx_gallery"))
+get_app(request_params = list(), gallery = get_gallery())
 }
 \arguments{
 \item{request_params}{List of app search parameters. For more information on
