@@ -158,6 +158,12 @@ Once you have the answers to the app questions you can queue the job.
 
     job <- queue_job(app, answers)
 
+If the server administrator has granted you access to set job priority,
+you can add priority using the `priority` parameter. Valid priority
+values are "low", "medium", "high", and "critical".
+
+    job <- queue_job(app, answers, priority = "high")
+
 The `job` will begin with status "Queued". Poll the job using `get_job`
 to update the job status.
 
