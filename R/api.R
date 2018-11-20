@@ -324,6 +324,12 @@ get_job_output <- function(job,
 #' @param app A single \code{alteryx_app} returned from \code{get_app}
 #' @param answers Answers to required \code{app} questions created using
 #' \code{build_answers}
+#' @param priority Assign a priority level to jobs to control which jobs are
+#' run by each worker, or to reserve specific workers for higher priority
+#' requests. When running a workflow, users (if enabled by the Server Admin)
+#' can select a priority level of 'low', 'medium', 'high', or 'critical' to
+#' ensure certain jobs always take priority over others. If multiple jobs are
+#' queued, jobs run in priority order starting with the highest priority.
 #' @param track_job If \code{TRUE} this function will not return a value until
 #' the job completes on Alteryx Gallery
 #' @param sleep Amount of time to wait between job polls. Ignored if
@@ -352,12 +358,18 @@ NULL
 #' @export
 queue_job <- function(app,
                       answers,
+                      priority = "low",
                       track_job = FALSE,
                       sleep = 10,
                       timeout = 3600,
                       gallery = get_gallery()) {
 
   class_check <- check_class(app, "app")
+
+  priority <- get_priority(priority)
+  answers <- jsonlite::fromJSON(answers)
+  answers["priority"] <- priority
+  answers <- jsonlite::toJSON(answers, auto_unbox = TRUE)
 
   request_params <- list()
   app_id <- app$id

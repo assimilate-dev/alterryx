@@ -4,12 +4,10 @@
 \alias{running_jobs}
 \alias{queue_job}
 \alias{build_answers}
-\alias{queue_job}
-\alias{build_answers}
 \title{Queue Job for an App}
 \usage{
-queue_job(app, answers, track_job = FALSE, sleep = 10, timeout = 3600,
-  gallery = get_gallery())
+queue_job(app, answers, priority = "low", track_job = FALSE,
+  sleep = 10, timeout = 3600, gallery = get_gallery())
 
 build_answers(name_value, ...)
 }
@@ -18,6 +16,13 @@ build_answers(name_value, ...)
 
 \item{answers}{Answers to required \code{app} questions created using
 \code{build_answers}}
+
+\item{priority}{Assign a priority level to jobs to control which jobs are
+run by each worker, or to reserve specific workers for higher priority
+requests. When running a workflow, users (if enabled by the Server Admin)
+can select a priority level of 'low', 'medium', 'high', or 'critical' to
+ensure certain jobs always take priority over others. If multiple jobs are
+queued, jobs run in priority order starting with the highest priority.}
 
 \item{track_job}{If \code{TRUE} this function will not return a value until
 the job completes on Alteryx Gallery}

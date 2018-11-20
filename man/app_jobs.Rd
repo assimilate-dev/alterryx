@@ -4,8 +4,6 @@
 \alias{app_jobs}
 \alias{get_app_jobs}
 \alias{get_job}
-\alias{get_app_jobs}
-\alias{get_job}
 \title{Get App Jobs}
 \usage{
 get_app_jobs(app, request_params = list(), gallery = get_gallery())

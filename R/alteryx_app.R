@@ -14,20 +14,20 @@
 #'
 #' @export
 as.alteryx_app <- function(x) {
-  
-  expected <- list("id" = "character",
-                   "subscriptionId" = "character",
-                   "public" = "logical",
-                   "runDisabled" = "logical",
-                   "packageType" = "integer",
-                   "uploadDate" = "character",
-                   "fileName" = "character",
-                   "metaInfo" = "list",
-                   "isChained" = "logical",
-                   "version" = "integer",
-                   "runCount" = "integer",
-                   "workerTag" = "character")
-  
+
+  expected <- list(id = "character",
+                   subscriptionId = "character",
+                   public = "logical",
+                   runDisabled = "logical",
+                   packageType = "integer",
+                   uploadDate = "character",
+                   fileName = "character",
+                   metaInfo = "list",
+                   isChained = "logical",
+                   version = "integer",
+                   runCount = "integer",
+                   workerTag = "character")
+
   x_class <- lapply(x, class)
   if(!identical(x_class, expected))
     stop("Unexpected input. Cannot convert to type alteryx_app.")
