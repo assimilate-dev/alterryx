@@ -4,7 +4,6 @@
 
 * Updated client to reflect changes in Alteryx Gallery API with 2018.3 release
     - Queue jobs with priority
-    - Assign jobs to specific workers
 
 # alterryx 0.3.1
 
