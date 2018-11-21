@@ -38,6 +38,24 @@ get_priority <- function(priority) {
   return(priority_int)
 }
 
+#' Get Worker
+#'
+#' Get the tag for the worker assigned to run the app or job
+#'
+#' @param resource An alteryx app or job
+get_worker <- function(resource) {
+  is_app <- is.alteryx_app(resource)
+  is_job <- is.alteryx_job(resource)
+
+  if(is_app | is_job) {
+    worker <- resource["workerTag"]
+  } else {
+    stop("Incorrect resource type. Cannot retrieve worker info")
+  }
+
+  return(worker)
+}
+
 #' Empty Answer
 #'
 #' Utility function used to queue a job for an app that has no questions
