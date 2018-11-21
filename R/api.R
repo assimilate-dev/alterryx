@@ -92,7 +92,7 @@ download_app <- function(app,
 
 #' Get App Questions
 #'
-#' @description Get the questions for the given Alteryx Analtytic App. Only app
+#' @description Get the questions for the given Alteryx Analytic App. Only app
 #' workflows can be used.
 #'
 #' @details Most Alteryx apps have questions, user input that defines how
