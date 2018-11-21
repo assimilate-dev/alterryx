@@ -12,7 +12,7 @@ get_app_questions(app, gallery = get_gallery())
 \item{gallery}{URL for your Alteryx Gallery}
 }
 \description{
-Get the questions for the given Alteryx Analtytic App. Only app
+Get the questions for the given Alteryx Analytic App. Only app
 workflows can be used.
 }
 \details{

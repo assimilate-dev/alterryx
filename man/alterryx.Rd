@@ -10,7 +10,7 @@
 endpoints. With \code{alterryx} users can:
 }
 \details{
-* Retrieve information on Alteryx Gallery resouces like apps, workflows, and
+* Retrieve information on Alteryx Gallery resources like apps, workflows, and
 macros
 * Queue jobs for applications
 * Retrieve the status and output of jobs

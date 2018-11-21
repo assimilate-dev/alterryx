@@ -1,7 +1,7 @@
 #' Percent encode all values in a list using \code{utils::URLencode}
 #'
 #' @param l A \code{list}
-#' @param reserved logical: should ‘reserved’ characters be encoded?
+#' @param reserved logical: should reserved characters be encoded?
 #' @param repeated logical: should apparently already-encoded URLs be encoded
 #' again?
 encode_list <- function(l, reserved = TRUE, repeated = TRUE) {

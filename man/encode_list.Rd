@@ -9,7 +9,7 @@ encode_list(l, reserved = TRUE, repeated = TRUE)
 \arguments{
 \item{l}{A \code{list}}
 
-\item{reserved}{logical: should ‘reserved’ characters be encoded?}
+\item{reserved}{logical: should reserved characters be encoded?}
 
 \item{repeated}{logical: should apparently already-encoded URLs be encoded
 again?}
