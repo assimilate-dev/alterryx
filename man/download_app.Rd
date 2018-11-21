@@ -4,7 +4,7 @@
 \alias{download_app}
 \title{Download App}
 \usage{
-download_app(app, destfile, gallery = getOption("alteryx_gallery"))
+download_app(app, destfile, gallery = get_gallery())
 }
 \arguments{
 \item{app}{A single \code{alteryx_app} returned from \code{get_app}}

@@ -1,3 +1,11 @@
+# alterryx 0.4.0
+
+* Forward slash at the end of Gallery URL will no longer produce an error
+
+* Updated client to reflect changes in Alteryx Gallery API with 2018.3 release
+    - Queue jobs with priority
+    - Assign jobs to specific workers
+
 # alterryx 0.3.1
 
 * API functions will no longer produce an invalid signature message when using
