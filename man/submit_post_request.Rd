@@ -4,7 +4,10 @@
 \alias{submit_post_request}
 \title{Submit POST Request}
 \usage{
-submit_post_request(gallery, endpoint, request_params, request_body, ...)
+submit_post_request(gallery, endpoint, request_params, request_body,
+  encode, content_type = NULL,
+  alteryx_api_key = getOption("alteryx_api_key"),
+  alteryx_secret_key = getOption("alteryx_secret_key"), ...)
 }
 \arguments{
 \item{gallery}{URL for your Alteryx Gallery}
@@ -14,6 +17,14 @@ submit_post_request(gallery, endpoint, request_params, request_body, ...)
 \item{request_params}{List of request parameters}
 
 \item{request_body}{JSON body of request containing values for app questions}
+
+\item{encode}{Encoding passed to \code{httr::POST}}
+
+\item{content_type}{Content type passed to \code{httr::POST}}
+
+\item{alteryx_api_key}{Admin API key for target environment}
+
+\item{alteryx_secret_key}{Admin API secret key for target environment}
 
 \item{...}{Additional arguments passed to \code{parse_request_response}}
 }

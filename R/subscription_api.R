@@ -379,7 +379,9 @@ queue_job <- function(app,
   content <- submit_post_request(gallery,
                                  endpoint,
                                  request_params,
-                                 request_body = answers)
+                                 request_body = answers,
+                                 encode = "raw",
+                                 content_type = httr::content_type_json())
 
   content <- as.alteryx_job(content, app)
 

@@ -1,3 +1,12 @@
+# alterryx 0.5.0
+
+* Add support for new migration endpoints introduced in 2018.4
+
+* Startup message will now indicate level of support
+
+* Limited support for admin API functions: `get_app_admin` and
+`download_app_admin`
+
 # alterryx 0.4.0
 
 * Forward slash at the end of Gallery URL will no longer produce an error

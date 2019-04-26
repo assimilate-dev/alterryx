@@ -4,10 +4,12 @@
 \alias{sign_base_string}
 \title{Sign Base String}
 \usage{
-sign_base_string(base_string)
+sign_base_string(base_string, alteryx_secret_key)
 }
 \arguments{
 \item{base_string}{Base string created with \code{build_base_string}}
+
+\item{alteryx_secret_key}{Admin API secret key for target environment}
 }
 \description{
 Sign Base String

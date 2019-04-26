@@ -27,23 +27,22 @@ as.alteryx_job <- function(x, parent) {
 
   x <- add_parent(x, parent)
 
-  expected <- list(appId = "NULL",
-                   parentApp = "character",
-                   parentId = "character",
-                   id = "character",
-                   createDate = "character",
-                   status = "character",
-                   disposition = "character",
-                   outputs = "list",
-                   messages = "list",
-                   priority = "integer",
-                   workerTag = "character")
+  expected <- c("appId",
+                "parentApp",
+                "parentId",
+                "id",
+                "createDate",
+                "status",
+                "disposition",
+                "outputs",
+                "messages",
+                "priority",
+                "workerTag")
 
-  expected <- expected[sort(names(expected))]
-  x <- x[sort(names(x))]
+  expected <- sort(expected)
+  x_names <- sort(names(x))
 
-  x_class <- lapply(x, class)
-  if(!identical(x_class, expected))
+  if(!identical(x_names, expected))
     stop("Unexpected input. Cannot convert to type alteryx_job.")
 
   class(x) <- append("alteryx_job", class(x))

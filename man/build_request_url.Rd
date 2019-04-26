@@ -4,7 +4,8 @@
 \alias{build_request_url}
 \title{Build Request URL}
 \usage{
-build_request_url(gallery, endpoint, request_method, request_params)
+build_request_url(gallery, endpoint, request_method, request_params,
+  alteryx_api_key, alteryx_secret_key)
 }
 \arguments{
 \item{gallery}{URL for your Alteryx Gallery}
@@ -14,6 +15,10 @@ build_request_url(gallery, endpoint, request_method, request_params)
 \item{request_method}{HTTP request verb}
 
 \item{request_params}{List of request parameters}
+
+\item{alteryx_api_key}{Admin API key for target environment}
+
+\item{alteryx_secret_key}{Admin API secret key for target environment}
 }
 \description{
 Build Request URL
