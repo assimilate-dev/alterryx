@@ -1,3 +1,6 @@
+alterryx
+========
+
 [![Travis-CI Build
 Status](https://travis-ci.org/mtreadwell/alterryx.svg?branch=master)](https://travis-ci.org/mtreadwell/alterryx)
 
@@ -14,6 +17,9 @@ With `alterryx` users can:
 In order to use this package, you will need to have [a private gallery
 API key and
 secret](https://community.alteryx.com/t5/Alteryx-Knowledge-Base/Private-Gallery-API-Key-and-Secret/ta-p/22009)
+
+Running Jobs in the Gallery
+===========================
 
 Setup
 -----
@@ -191,3 +197,162 @@ warning by default and skip the 'invalid' outputs.
 
 In order to be properly converted, your output must be written in *csv*
 or *yxdb* format from the Alteryx app published to Gallery.
+
+Migrating Apps, Macros, and Workflows
+=====================================
+
+Setup
+-----
+
+For migration, you will need keys and access to the admin Gallery API.
+Non-admin keys will not work for migration and admin keys will not work
+for normal API operation.
+
+Once you have obtained your admin API key and secret set them as global
+options. Though it is not necessary, it will save you typing later if
+you also set your Alteryx Gallery URL as an option.
+
+    alteryx_api_key <- "ALTERYX_API_KEY"
+    alteryx_secret_key <- "ALTERYX_API_SECRET"
+    alteryx_gallery <- "https://yourgallery.com/gallery"
+
+    options(alteryx_api_key = alteryx_api_key)
+    options(alteryx_secret_key = alteryx_secret_key)
+    options(alteryx_gallery = alteryx_gallery)
+
+Migration involves movement from one environment to another, so you will
+also need access to the admin API for the target environment.
+
+    target_alteryx_api_key <- 'TARGET_ALTERYX_API_KEY'
+    target_alteryx_secret_key <- 'TARGET_ALTERYX_API_SECRET'
+    target_alteryx_gallery <- "https://your-other-gallery.com/gallery"
+
+    options(target_alteryx_api_key = target_alteryx_api_key)
+    options(target_alteryx_secret_key = alteryx_secret_key)
+    options(target_alteryx_gallery = target_alteryx_gallery)
+
+*NOTE* You can migrate from and to the same enviornment.
+
+Migratable Apps
+---------------
+
+Users and admins can mark all resources on Alteryx Gallery as "ready for
+migration." Once marked, admins can get a list of all resources that are
+ready. The function returns all apps in the Gallery that are ready for
+migration.
+
+    migratable_apps <- get_migratable()
+
+    # Searching for resources marked for migration... 
+    # 2 resources found... 
+    # 
+    #    APP_1.yxwz 
+    #    APP_2.yxwz
+
+*Known Issue* `get_migratable` has an option to filter resources by a
+list of specific subscriptions (private studios) but the functionality
+is not working properly.
+
+    get_migratable(
+      subscription = list(
+        subscriptionIds = "subscription1,subscription2"
+      )
+    )
+
+Downloading and Migrating
+-------------------------
+
+Once you've obtained a list of apps to migrate, you can migrate them
+using `publish()`. The function downloads the app to the given directory
+and then publishes to the Gallery using the credentials and information
+you set as options.
+
+When publishing, you can provide a form which will determine certain
+options for the app in the target environment. If you do not provide a
+form, the form will be generated for you using the app information in
+the source environment.
+
+-   `name`: Give the app a new name
+-   `owner`: Give the app a new owner (must exist in target system)
+-   `validate` Perform a validation run prior to publishing?
+-   `isPublic` Place the app in the Public Gallery?
+-   `sourceId` See below
+-   `workerTag` Assigned worker name
+-   `canDownload` Can others download the app?
+
+If `sourceId` is left blank, it will create a new copy of the published
+app in the target enviornment. If you provide the app ID from the
+*source* environment, it will overwrite the appropriate app in the
+*target* environment.
+
+    form <- list(
+      name = "APP_1.yxwz",
+      owner = "yourname@domain.com",
+      validate = "false",
+      isPublic = "false",
+      sourceId = "",
+      workerTag = "",
+      canDownload = "false"
+    )
+
+    publish(
+      migratable_app,
+      migration_directory = "c:/temp",
+      form = form
+    )
+
+    # APP_1.yxwz 
+    # --------------- 
+    #   Downloading workflow... 
+    #   Saving workflow... 
+    #   Publishing workflow to target environment... 
+    #   Done. Publish in target environment as 2acd7c 
+
+Toggle Migration Flag
+---------------------
+
+Once the app has been published to the target enviornment, you will
+likely want to turn off the "Ready to Migrate" flag in the source
+environment.
+
+    toggle_migratable(migratable_app)
+
+Automation
+----------
+
+I've provided a convenient wrapper to automate migrating workflows:
+`migrate()`. This function identifies all resources ready for migration
+and publishes them to the target enviornment. If you provide a form for
+migration, it will use the information provided but change the app name
+and ID for each item marked for migration.
+
+    migrate(
+      form = form,
+      migration_directory = "c:/temp"
+    )
+
+    # Beginning Migration... 
+    # 
+    # Searching for resources marked for migration... 
+    # 2 resources found... 
+    # 
+    #    APP_1.yxwz 
+    #    APP_2.yxwz 
+    # 
+    # APP_1.yxwz 
+    # --------------- 
+    #   Downloading workflow... 
+    #   Saving workflow... 
+    #   Publishing workflow to target environment... 
+    #   Done. Publish in target environment as 2acd7c 
+    # 
+    # 
+    # APP_2.yxwz 
+    # --------------- 
+    #   Downloading workflow... 
+    #   Saving workflow... 
+    #   Publishing workflow to target environment... 
+    #   Done. Publish in target environment as 2acd97 
+    # 
+    # Toggling Migrate Flag... 
+    # Done

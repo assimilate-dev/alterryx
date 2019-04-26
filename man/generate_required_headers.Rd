@@ -4,7 +4,10 @@
 \alias{generate_required_headers}
 \title{Generate the request headers required by Alteryx Gallery}
 \usage{
-generate_required_headers()
+generate_required_headers(alteryx_api_key)
+}
+\arguments{
+\item{alteryx_api_key}{Admin API key for target environment}
 }
 \description{
 Generate the request headers required by Alteryx Gallery

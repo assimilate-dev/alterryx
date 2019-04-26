@@ -16,11 +16,12 @@ generate_nonce <- function() {
 }
 
 #' Generate the request headers required by Alteryx Gallery
-generate_required_headers <- function() {
+#' @param alteryx_api_key Admin API key for target environment
+generate_required_headers <- function(alteryx_api_key) {
   oauth_nonce <- generate_nonce()
   oauth_timestamp <- as.character(as.integer(Sys.time()))
   required_headers <- list(
-    oauth_consumer_key = getOption("alteryx_api_key"),
+    oauth_consumer_key = alteryx_api_key,
     oauth_signature_method = "HMAC-SHA1",
     oauth_timestamp = oauth_timestamp,
     oauth_nonce = oauth_nonce,
@@ -74,8 +75,9 @@ build_base_string <- function(request_method,
 #' Sign Base String
 #'
 #' @param base_string Base string created with \code{build_base_string}
-sign_base_string <- function(base_string) {
-  signing_key <- paste0(getOption("alteryx_secret_key"), "&")
+#' @param alteryx_secret_key Admin API secret key for target environment
+sign_base_string <- function(base_string, alteryx_secret_key) {
+  signing_key <- paste0(alteryx_secret_key, "&")
   signature <-
     digest::hmac(signing_key, base_string, algo = "sha1", raw = TRUE)
   signature <- base64enc::base64encode(signature)
@@ -92,11 +94,13 @@ sign_base_string <- function(base_string) {
 #' @param required_headers Required headers created with
 #' \code{build_required_headers}
 #' @param request_params List of request parameters
+#' @param alteryx_secret_key Admin API secret key for target environment
 build_signature <- function(gallery,
                             endpoint,
                             request_method,
                             required_headers,
-                            request_params) {
+                            request_params,
+                            alteryx_secret_key) {
   base_url <- build_base_url(gallery, endpoint)
 
   required_headers <- encode_list(required_headers)
@@ -109,7 +113,7 @@ build_signature <- function(gallery,
     build_base_string(request_method,
                       base_url,
                       normalized_request_params)
-  signature <- sign_base_string(base_string)
+  signature <- sign_base_string(base_string, alteryx_secret_key)
 
   return(signature)
 }

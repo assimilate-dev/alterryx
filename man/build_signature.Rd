@@ -5,7 +5,7 @@
 \title{Make Signature}
 \usage{
 build_signature(gallery, endpoint, request_method, required_headers,
-  request_params)
+  request_params, alteryx_secret_key)
 }
 \arguments{
 \item{gallery}{URL of an Alteryx Gallery}
@@ -18,6 +18,8 @@ build_signature(gallery, endpoint, request_method, required_headers,
 \code{build_required_headers}}
 
 \item{request_params}{List of request parameters}
+
+\item{alteryx_secret_key}{Admin API secret key for target environment}
 }
 \description{
 Make Signature

@@ -49,3 +49,37 @@ get_priority <- function(priority) {
 #'
 #' @export
 empty_answer <- function() build_answers(list())
+
+#' Get Migration Default Form
+#'
+#' Utility function to extract app info to populate migration form defaults
+#'
+#' @param app A single \code{alteryx_app} returned from \code{get_app}
+get_migration_form <- function(app) {
+
+  form <- list(
+    name = app$metaInfo$name,
+    owner = app$publishedVersionOwner$email,
+    validate = "false",
+    isPublic = "false",
+    sourceId = app$id,
+    workerTag = app$workerTag,
+    canDownload = "false"
+  )
+
+  return(form)
+
+}
+
+#' Cat Paste
+#'
+#' For when you need to paste your cats
+#'
+#' @param ... Things to paste on your cat
+cat_paste <- function(...) {
+  cat(
+    paste(
+      ...
+    )
+  )
+}

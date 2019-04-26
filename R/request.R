@@ -4,17 +4,22 @@
 #' @param endpoint The api endpoint beginning and ending with "/"
 #' @param request_method HTTP request verb
 #' @param request_params List of request parameters
+#' @param alteryx_api_key Admin API key for target environment
+#' @param alteryx_secret_key Admin API secret key for target environment
 build_request_url <- function(gallery,
                               endpoint,
                               request_method,
-                              request_params) {
+                              request_params,
+                              alteryx_api_key,
+                              alteryx_secret_key) {
   key_check <- check_keys()
-  required_headers <- generate_required_headers()
+  required_headers <- generate_required_headers(alteryx_api_key)
   oauth_signature <- build_signature(gallery,
                                      endpoint,
                                      request_method,
                                      required_headers,
-                                     request_params)
+                                     request_params,
+                                     alteryx_secret_key)
   params <- append(required_headers, request_params)
   params <- encode_list(params)
   params <- append(params, list(oauth_signature = oauth_signature))
@@ -67,14 +72,42 @@ parse_request_response <- function(response,
 submit_get_request <- function(gallery,
                                endpoint,
                                request_params,
+                               alteryx_api_key = getOption("alteryx_api_key"),
+                               alteryx_secret_key = getOption("alteryx_secret_key"),
                                ...) {
   request_method <- "GET"
   request_url <-
     build_request_url(gallery,
                       endpoint,
                       request_method,
-                      request_params)
+                      request_params,
+                      alteryx_api_key,
+                      alteryx_secret_key)
   response <- httr::GET(request_url)
+  content <- parse_request_response(response, ...)
+
+  return(content)
+}
+
+#' Submit PUT Request
+#'
+#' @inheritParams build_request_url
+#' @param ... Additional arguments passed to \code{parse_request_response}
+submit_put_request <- function(gallery,
+                               endpoint,
+                               request_params,
+                               alteryx_api_key = getOption("alteryx_api_key"),
+                               alteryx_secret_key = getOption("alteryx_secret_key"),
+                               ...) {
+  request_method <- "PUT"
+  request_url <-
+    build_request_url(gallery,
+                      endpoint,
+                      request_method,
+                      request_params,
+                      alteryx_api_key,
+                      alteryx_secret_key)
+  response <- httr::PUT(request_url)
   content <- parse_request_response(response, ...)
 
   return(content)
@@ -84,22 +117,43 @@ submit_get_request <- function(gallery,
 #'
 #' @inheritParams build_request_url
 #' @param request_body JSON body of request containing values for app questions
+#' @param encode Encoding passed to \code{httr::POST}
+#' @param content_type Content type passed to \code{httr::POST}
 #' @param ... Additional arguments passed to \code{parse_request_response}
 submit_post_request <- function(gallery,
                                 endpoint,
                                 request_params,
                                 request_body,
+                                encode,
+                                content_type = NULL,
+                                alteryx_api_key = getOption("alteryx_api_key"),
+                                alteryx_secret_key = getOption("alteryx_secret_key"),
                                 ...) {
   request_method <- "POST"
   request_url <-
     build_request_url(gallery,
                       endpoint,
                       request_method,
-                      request_params)
-  response <- httr::POST(request_url,
-                         body = request_body,
-                         encode = "raw",
-                         httr::content_type_json())
+                      request_params,
+                      alteryx_api_key,
+                      alteryx_secret_key)
+
+  post_args <- list(
+    url = request_url,
+    body = request_body,
+    encode = encode
+  )
+
+  if(!is.null(content_type)) {
+    post_args <- append(
+      post_args,
+      list(
+        content_type
+      )
+    )
+  }
+
+  response <- do.call(httr::POST, post_args)
   content <- parse_request_response(response, ...)
 
   return(content)

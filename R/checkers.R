@@ -36,12 +36,32 @@ check_status <- function(response) {
 }
 
 #' Check Keys
-check_keys <- function() {
-  key <- getOption("alteryx_api_key")
-  secret <- getOption("alteryx_secret_key")
+#'
+#' @param type "source" or "target"
+check_keys <- function(type = "source") {
 
-  if(is.null(key) || is.null(secret))
-    stop("'alteryx_api_key' and/or 'alteryx_secret_key' not set as option")
+  ev_list <- c(
+    "alteryx_api_key",
+    "alteryx_secret_key",
+    "alteryx_gallery"
+  )
+
+  if(type == "target") {
+    ev_list <- paste0("target_", ev_list)
+  }
+
+  ev <- lapply(ev_list, function(x) getOption(x))
+  names(ev) <- ev_list
+
+  m <- paste("'", ev_list[1],
+             "', '", ev_list[2],
+             "', and/or '", ev_list[3],
+             "' not set as options.")
+
+  if(
+    length(ev) != length(ev_list)
+  )
+    stop(m)
 
   return(NULL)
 }

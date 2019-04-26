@@ -4,7 +4,10 @@
 \alias{check_keys}
 \title{Check Keys}
 \usage{
-check_keys()
+check_keys(type = "source")
+}
+\arguments{
+\item{type}{"source" or "target"}
 }
 \description{
 Check Keys
