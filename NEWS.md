@@ -1,3 +1,8 @@
+# alteryx 0.6.0
+
+* `publish()` now saves files in the staging directory as .yxzp instead of
+.yx(wz/mc/md)
+
 # alterryx 0.5.0
 
 * Add support for new migration endpoints introduced in 2018.4
