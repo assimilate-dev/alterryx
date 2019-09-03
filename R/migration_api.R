@@ -279,7 +279,8 @@ publish <- function(app,
       )
   }
 
-  app_name <- gsub("\\.yx.+", ".yxzp", app$fileName)
+  full_app_name <- paste(app$id, app$fileName, sep = "_")
+  app_name <- gsub("\\.yx.+", ".yxzp", full_app_name)
   file <- file.path(migration_directory, app_name)
 
   if(verbose)
