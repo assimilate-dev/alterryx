@@ -3,6 +3,9 @@
 * `publish()` now saves files in the staging directory as .yxzp instead of
 .yx(wz/mc/md)
 
+* `publish()` now saves files in the staging directory with the app ID as a
+prefix to differentiate apps with identical names
+
 # alterryx 0.5.0
 
 * Add support for new migration endpoints introduced in 2018.4
