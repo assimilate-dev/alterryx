@@ -19,27 +19,10 @@ as.alteryx_app_admin <- function(x) {
   # sometimes values are returned as NULL instead of their proper type
   # i don't have time to figure this out so for now i am implementing
   # a less restrictive test
-  expected <- c("fileName",
-                "id",
-                "isChained",
-                "metaInfo",
-                "packageType",
-                "public",
-                "runCount",
-                "runDisabled",
-                "subscriptionId",
-                "uploadDate",
-                "version",
-                "workerTag",
-                "collections",
-                "lastRunDate",
-                "publishedVersionId",
-                "publishedVersionNumber",
-                "publishedVersionOwner",
-                "subscriptionName")
+  expected <- c("fileName", "id")
 
   x_names <- names(x)
-  if(!identical(x_names, expected))
+  if(!all(expected %in% x_names))
     stop("Unexpected input. Cannot convert to type alteryx_app_admin.")
 
   class(x) <- append("alteryx_app_admin", class(x))
@@ -58,7 +41,6 @@ format.alteryx_app_admin <- function(x, ...) {
   paste(
     paste("App Name:", x$fileName),
     paste("App ID:", x$id),
-    paste("Owner:", x$subscriptionName),
     sep = "\n"
   )
 }
